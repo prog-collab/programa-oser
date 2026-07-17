@@ -34,7 +34,6 @@
 
   a{color:inherit;}
 
-  /* Focus visibility */
   a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible{
     outline:2px solid var(--focus);
     outline-offset:2px;
@@ -87,6 +86,30 @@
     color:#c2b393;
     margin-top:6px;
   }
+
+  /* ---------- Language switch ---------- */
+  .lang-switch{
+    display:flex;
+    border:1px solid rgba(233,226,211,0.35);
+    border-radius:100px;
+    overflow:hidden;
+    width:fit-content;
+  }
+  .lang-switch button{
+    background:none;
+    border:none;
+    color:#c2b393;
+    font-family:"Courier New",monospace;
+    font-size:11.5px;
+    letter-spacing:.08em;
+    padding:6px 14px;
+    cursor:pointer;
+  }
+  .lang-switch button.active{
+    background:var(--brass);
+    color:#fff;
+  }
+  .lang-switch-mobile{display:none;}
 
   nav.toc{display:flex;flex-direction:column;gap:2px;}
   nav.toc a{
@@ -425,7 +448,6 @@
     gap:16px;
   }
 
-  /* highlight-on-scroll target */
   .flash{animation:flashbg 1.4s ease;}
   @keyframes flashbg{
     0%{background:#f1d9ab;}
@@ -445,13 +467,27 @@
       padding:14px 18px;
       z-index:100;
     }
-    .sidebar .brand,.sidebar nav.toc,.sidebar-foot{display:none;}
+    .sidebar .brand,.sidebar nav.toc,.sidebar-foot,.sidebar .lang-switch{display:none;}
     .mobile-bar{
       display:flex;align-items:center;justify-content:space-between;
       width:100%;
+      gap:10px;
     }
     .mobile-bar .name{color:#e9e2d3;font-size:14px;}
-    .mobile-bar button{
+    .mobile-bar-right{display:flex;align-items:center;gap:10px;}
+    .lang-switch-mobile{
+      display:flex;
+      border:1px solid rgba(233,226,211,0.35);
+      border-radius:100px;
+      overflow:hidden;
+    }
+    .lang-switch-mobile button{
+      background:none;border:none;color:#c2b393;
+      font-family:"Courier New",monospace;font-size:11px;
+      padding:6px 11px;cursor:pointer;
+    }
+    .lang-switch-mobile button.active{background:var(--brass);color:#fff;}
+    .mobile-bar button.menu-btn{
       background:none;border:1px solid #e9e2d3;color:#e9e2d3;
       padding:7px 12px;font-size:12px;border-radius:var(--radius);
       font-family:inherit;cursor:pointer;
@@ -490,45 +526,55 @@
   <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
     <div class="mobile-bar">
-      <span class="name">OSER · Programa</span>
-      <button id="menuToggle" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
+      <span class="name" data-i18n="brand.mobileName">OSER · Programa</span>
+      <div class="mobile-bar-right">
+        <div class="lang-switch-mobile" role="group" aria-label="Idioma / Language">
+          <button type="button" class="lang-btn" data-lang="es">ES</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <button class="menu-btn" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" data-i18n="nav.menu">Menú</button>
+      </div>
     </div>
 
     <div class="brand">
       <div class="mark">ER</div>
-      <div class="name">Orquesta Sinfónica<br>de Entre Ríos</div>
-      <div class="sub">Programa de sala</div>
+      <div class="name" data-i18n="brand.name">Orquesta Sinfónica<br>de Entre Ríos</div>
+      <div class="sub" data-i18n="brand.sub">Programa de sala</div>
+    </div>
+
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-btn" data-lang="es">ES</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
     </div>
 
     <div class="search-wrap">
-      <input type="text" id="searchInput" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
+      <input type="text" id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
       <div class="search-results" id="searchResults"></div>
     </div>
 
     <nav class="toc" aria-label="Secciones del programa">
-      <a href="#inicio" class="toc-link"><span class="num">00</span> Inicio</a>
-      <a href="#programa" class="toc-link"><span class="num">01</span> Programa</a>
-      <a href="#historia" class="toc-link"><span class="num">02</span> Historia</a>
-      <a href="#director" class="toc-link"><span class="num">03</span> Director</a>
-      <a href="#integrantes" class="toc-link"><span class="num">04</span> Integrantes</a>
+      <a href="#inicio" class="toc-link"><span class="num">00</span> <span data-i18n="nav.inicio">Inicio</span></a>
+      <a href="#programa" class="toc-link"><span class="num">01</span> <span data-i18n="nav.programa">Programa</span></a>
+      <a href="#historia" class="toc-link"><span class="num">02</span> <span data-i18n="nav.historia">Historia</span></a>
+      <a href="#director" class="toc-link"><span class="num">03</span> <span data-i18n="nav.director">Director</span></a>
+      <a href="#integrantes" class="toc-link"><span class="num">04</span> <span data-i18n="nav.integrantes">Integrantes</span></a>
     </nav>
 
-    <div class="sidebar-foot">
+    <div class="sidebar-foot" data-i18n="brand.foot">
       Sábado 25 de julio, 20h<br>
       Centro Cultural La Vieja Usina · Paraná
     </div>
   </aside>
 
-  <!-- Mobile menu + search (shown under sticky bar on small screens) -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#inicio">00 · Inicio</a>
-    <a href="#programa">01 · Programa</a>
-    <a href="#historia">02 · Historia</a>
-    <a href="#director">03 · Director</a>
-    <a href="#integrantes">04 · Integrantes</a>
+    <a href="#inicio"><span class="num">00</span> · <span data-i18n="nav.inicio">Inicio</span></a>
+    <a href="#programa"><span class="num">01</span> · <span data-i18n="nav.programa">Programa</span></a>
+    <a href="#historia"><span class="num">02</span> · <span data-i18n="nav.historia">Historia</span></a>
+    <a href="#director"><span class="num">03</span> · <span data-i18n="nav.director">Director</span></a>
+    <a href="#integrantes"><span class="num">04</span> · <span data-i18n="nav.integrantes">Integrantes</span></a>
   </div>
   <div class="mobile-search" id="mobileSearchWrap" style="display:none;">
-    <input type="text" id="searchInputMobile" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
+    <input type="text" id="searchInputMobile" data-i18n-placeholder="search.placeholder" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
   </div>
 
   <!-- ================= MAIN ================= -->
@@ -537,9 +583,9 @@
     <!-- ---- HERO ---- -->
     <section class="hero" id="inicio">
       <div class="hero-inner">
-        <p class="eyebrow">Música — Concierto de temporada</p>
-        <h1>La Sinfónica<br>en <em>La Vieja Usina</em></h1>
-        <p class="desc">La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Música — Concierto de temporada</p>
+        <h1 data-i18n="hero.title">La Sinfónica<br>en <em>La Vieja Usina</em></h1>
+        <p class="desc" data-i18n="hero.desc">La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.</p>
 
         <svg class="baton" viewBox="0 0 100 100" aria-hidden="true">
           <line x1="20" y1="80" x2="78" y2="20" stroke="#b5762c" stroke-width="2" opacity="0.6"/>
@@ -549,114 +595,114 @@
 
         <div class="hero-meta">
           <div class="cell">
-            <div class="label">Fecha</div>
-            <div class="value">Sáb 25 de julio</div>
+            <div class="label" data-i18n="hero.fecha">Fecha</div>
+            <div class="value" data-i18n="hero.fechaVal">Sáb 25 de julio</div>
           </div>
           <div class="cell">
-            <div class="label">Horario</div>
+            <div class="label" data-i18n="hero.horario">Horario</div>
             <div class="value">20:00 h</div>
           </div>
           <div class="cell">
-            <div class="label">Lugar</div>
-            <div class="value small">Centro Cultural La Vieja Usina<br>Gregoria Matorras de San Martín 861, Paraná</div>
+            <div class="label" data-i18n="hero.lugar">Lugar</div>
+            <div class="value small" data-i18n="hero.lugarVal">Centro Cultural La Vieja Usina<br>Gregoria Matorras de San Martín 861, Paraná</div>
           </div>
           <div class="cell">
-            <div class="label">Director</div>
+            <div class="label" data-i18n="hero.director">Director</div>
             <div class="value">Luis Gorelik</div>
           </div>
         </div>
 
-        <span class="badge-free">Entrada libre y gratuita — por orden de llegada</span>
+        <span class="badge-free" data-i18n="hero.badge">Entrada libre y gratuita — por orden de llegada</span>
       </div>
     </section>
 
     <!-- ---- PROGRAMA ---- -->
     <section id="programa">
-      <p class="eyebrow">01 — Repertorio</p>
-      <h2>Obras del programa</h2>
-      <p class="section-intro">Dos obras que dialogan desde extremos distintos del romanticismo francés: la languidez impresionista de Debussy y el desborde autobiográfico de Berlioz.</p>
+      <p class="eyebrow" data-i18n="programa.eyebrow">01 — Repertorio</p>
+      <h2 data-i18n="programa.title">Obras del programa</h2>
+      <p class="section-intro" data-i18n="programa.intro">Dos obras que dialogan desde extremos distintos del romanticismo francés: la languidez impresionista de Debussy y el desborde autobiográfico de Berlioz.</p>
 
-      <details class="piece" open data-searchable data-title="Preludio a la siesta de un fauno" data-composer="Claude Debussy">
+      <details class="piece" open data-searchable data-title-es="Preludio a la siesta de un fauno" data-title-en="Prelude to the Afternoon of a Faun" data-composer="Claude Debussy">
         <summary>
           <span class="pnum">01</span>
           <span class="ptitle">
             <span class="composer">Claude Debussy</span>
-            <span class="work">Preludio a la siesta de un fauno</span>
+            <span class="work" data-i18n="piece1.title">Preludio a la siesta de un fauno</span>
           </span>
           <span class="chev">+</span>
         </summary>
         <div class="body">
-          <p>Poema sinfónico compuesto en 1894, inspirado en el poema de Stéphane Mallarmé. Considerada una obra bisagra hacia la música del siglo XX por su tratamiento libre de la armonía y el color orquestal, antes que su estructura formal.</p>
+          <p data-i18n="piece1.body">Poema sinfónico compuesto en 1894, inspirado en el poema de Stéphane Mallarmé. Considerada una obra bisagra hacia la música del siglo XX por su tratamiento libre de la armonía y el color orquestal, antes que su estructura formal.</p>
           <div class="facts">
-            <div><span>Compositor</span>Claude Debussy (1862–1918)</div>
-            <div><span>Año de composición</span>1894</div>
-            <div><span>Duración aprox.</span>10 min</div>
+            <div><span data-i18n="piece.factComposer">Compositor</span>Claude Debussy (1862–1918)</div>
+            <div><span data-i18n="piece.factYear">Año de composición</span>1894</div>
+            <div><span data-i18n="piece.factDuration">Duración aprox.</span>10 min</div>
           </div>
-          <p class="editable-note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
+          <p class="editable-note" data-i18n="piece1.note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
         </div>
       </details>
 
-      <details class="piece" data-searchable data-title="Sinfonía Fantástica" data-composer="Héctor Berlioz">
+      <details class="piece" data-searchable data-title-es="Sinfonía Fantástica" data-title-en="Symphonie Fantastique" data-composer="Héctor Berlioz">
         <summary>
           <span class="pnum">02</span>
           <span class="ptitle">
             <span class="composer">Héctor Berlioz</span>
-            <span class="work">Sinfonía Fantástica, Op. 14</span>
+            <span class="work" data-i18n="piece2.title">Sinfonía Fantástica, Op. 14</span>
           </span>
           <span class="chev">+</span>
         </summary>
         <div class="body">
-          <p>Estrenada en 1830, es una de las obras fundacionales del romanticismo orquestal. Narra en cinco movimientos el delirio pasional de un artista obsesionado, unificados por una "idea fija" melódica que reaparece transformada en cada parte.</p>
+          <p data-i18n="piece2.body">Estrenada en 1830, es una de las obras fundacionales del romanticismo orquestal. Narra en cinco movimientos el delirio pasional de un artista obsesionado, unificados por una "idea fija" melódica que reaparece transformada en cada parte.</p>
           <div class="facts">
-            <div><span>Compositor</span>Héctor Berlioz (1803–1869)</div>
-            <div><span>Año de composición</span>1830</div>
-            <div><span>Movimientos</span>5</div>
-            <div><span>Duración aprox.</span>50 min</div>
+            <div><span data-i18n="piece.factComposer">Compositor</span>Héctor Berlioz (1803–1869)</div>
+            <div><span data-i18n="piece.factYear">Año de composición</span>1830</div>
+            <div><span data-i18n="piece.factMovements">Movimientos</span>5</div>
+            <div><span data-i18n="piece.factDuration">Duración aprox.</span>50 min</div>
           </div>
-          <p class="editable-note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
+          <p class="editable-note" data-i18n="piece2.note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
         </div>
       </details>
     </section>
 
     <!-- ---- HISTORIA ---- -->
-    <section id="historia" data-searchable data-title="Historia de la OSER" data-composer="">
-      <p class="eyebrow">02 — Institucional</p>
-      <h2>Historia</h2>
-      <p class="section-intro">Reseña institucional de la Orquesta Sinfónica de Entre Ríos.</p>
+    <section id="historia" data-searchable data-title-es="Historia de la OSER" data-title-en="OSER History" data-composer="">
+      <p class="eyebrow" data-i18n="historia.eyebrow">02 — Institucional</p>
+      <h2 data-i18n="historia.title">Historia</h2>
+      <p class="section-intro" data-i18n="historia.intro">Reseña institucional de la Orquesta Sinfónica de Entre Ríos.</p>
 
       <div class="historia-grid">
         <div>
-          <p class="lede">Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.</p>
-          <p>La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.</p>
+          <p class="lede" data-i18n="historia.lede">Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.</p>
+          <p data-i18n="historia.p1">La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.</p>
         </div>
         <div>
-          <p>Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.</p>
-          <span class="editable-note">Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.</span>
+          <p data-i18n="historia.p2">Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.</p>
+          <span class="editable-note" data-i18n="historia.note">Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.</span>
         </div>
       </div>
     </section>
 
     <!-- ---- DIRECTOR ---- -->
-    <section id="director" data-searchable data-title="Luis Gorelik" data-composer="Director">
-      <p class="eyebrow">03 — Dirección artística</p>
-      <h2>Director</h2>
+    <section id="director" data-searchable data-title-es="Luis Gorelik" data-title-en="Luis Gorelik" data-composer="Director">
+      <p class="eyebrow" data-i18n="director.eyebrow">03 — Dirección artística</p>
+      <h2 data-i18n="director.title">Director</h2>
       <p class="section-intro"></p>
 
       <div class="director-card">
-        <div class="director-photo">Foto<br>de<br>Luis Gorelik</div>
+        <div class="director-photo" data-i18n="director.photoLabel">Foto<br>de<br>Luis Gorelik</div>
         <div>
           <h3 class="director-name">Luis Gorelik</h3>
-          <p class="director-role">Director artístico — OSER</p>
+          <p class="director-role" data-i18n="director.role">Director artístico — OSER</p>
           <div class="director-bio">
-            <p>Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.</p>
-            <p>Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).</p>
-            <p>Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.</p>
+            <p data-i18n="director.p1">Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.</p>
+            <p data-i18n="director.p2">Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).</p>
+            <p data-i18n="director.p3">Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.</p>
           </div>
           <div class="director-highlights">
-            <span>Premio Konex 2009</span>
-            <span>Medalla Claudio Arrau · Chile 2005</span>
-            <span>Premio Gardel 2014</span>
-            <span>Formado en Jerusalén — Academia Rubin</span>
+            <span data-i18n="director.h1">Premio Konex 2009</span>
+            <span data-i18n="director.h2">Medalla Claudio Arrau · Chile 2005</span>
+            <span data-i18n="director.h3">Premio Gardel 2014</span>
+            <span data-i18n="director.h4">Formado en Jerusalén — Academia Rubin</span>
           </div>
         </div>
       </div>
@@ -664,80 +710,80 @@
 
     <!-- ---- INTEGRANTES ---- -->
     <section id="integrantes">
-      <p class="eyebrow">04 — Nómina</p>
-      <h2>Integrantes</h2>
-      <p class="section-intro">El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.</p>
+      <p class="eyebrow" data-i18n="integrantes.eyebrow">04 — Nómina</p>
+      <h2 data-i18n="integrantes.title">Integrantes</h2>
+      <p class="section-intro" data-i18n="integrantes.intro">El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.</p>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name">Cuerdas</span>
+          <span class="st-name" data-i18n="integrantes.cuerdas">Cuerdas</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count">0 músicos</span>
+            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
-          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3">Completar con la nómina de violines, violas, violonchelos y contrabajos.</td></tr>
+            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyCuerdas">Completar con la nómina de violines, violas, violonchelos y contrabajos.</td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name">Maderas</span>
+          <span class="st-name" data-i18n="integrantes.maderas">Maderas</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count">0 músicos</span>
+            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
-          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3">Completar con flautas, oboes, clarinetes y fagotes.</td></tr>
+            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyMaderas">Completar con flautas, oboes, clarinetes y fagotes.</td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name">Metales</span>
+          <span class="st-name" data-i18n="integrantes.metales">Metales</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count">0 músicos</span>
+            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
-          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3">Completar con trompas, trompetas, trombones y tuba.</td></tr>
+            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyMetales">Completar con trompas, trompetas, trombones y tuba.</td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name">Percusión</span>
+          <span class="st-name" data-i18n="integrantes.percusion">Percusión</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count">0 músicos</span>
+            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
-          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3">Completar con timbales y percusión.</td></tr>
+            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyPercusion">Completar con timbales y percusión.</td></tr>
           </tbody>
         </table>
       </details>
 
-      <p class="editable-note">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.</p>
+      <p class="editable-note" data-i18n="integrantes.helpNote">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.</p>
     </section>
 
     <footer>
-      <div>Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos</div>
-      <div>Centro de Ojos Dr. Lódolo · La Vieja Usina</div>
+      <div data-i18n="footer.left">Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos</div>
+      <div data-i18n="footer.right">Centro de Ojos Dr. Lódolo · La Vieja Usina</div>
     </footer>
 
   </main>
@@ -745,6 +791,190 @@
 
 <script>
 (function(){
+
+  // ============================================================
+  // TRANSLATION DICTIONARY
+  // ============================================================
+  const i18n = {
+    es: {
+      "brand.mobileName": "OSER · Programa",
+      "brand.name": "Orquesta Sinfónica<br>de Entre Ríos",
+      "brand.sub": "Programa de sala",
+      "brand.foot": "Sábado 25 de julio, 20h<br>Centro Cultural La Vieja Usina · Paraná",
+      "nav.menu": "Menú",
+      "nav.inicio": "Inicio",
+      "nav.programa": "Programa",
+      "nav.historia": "Historia",
+      "nav.director": "Director",
+      "nav.integrantes": "Integrantes",
+      "search.placeholder": "Buscar compositor, obra, músico…",
+      "hero.eyebrow": "Música — Concierto de temporada",
+      "hero.title": "La Sinfónica<br>en <em>La Vieja Usina</em>",
+      "hero.desc": "La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.",
+      "hero.fecha": "Fecha",
+      "hero.fechaVal": "Sáb 25 de julio",
+      "hero.horario": "Horario",
+      "hero.lugar": "Lugar",
+      "hero.lugarVal": "Centro Cultural La Vieja Usina<br>Gregoria Matorras de San Martín 861, Paraná",
+      "hero.director": "Director",
+      "hero.badge": "Entrada libre y gratuita — por orden de llegada",
+      "programa.eyebrow": "01 — Repertorio",
+      "programa.title": "Obras del programa",
+      "programa.intro": "Dos obras que dialogan desde extremos distintos del romanticismo francés: la languidez impresionista de Debussy y el desborde autobiográfico de Berlioz.",
+      "piece1.title": "Preludio a la siesta de un fauno",
+      "piece1.body": "Poema sinfónico compuesto en 1894, inspirado en el poema de Stéphane Mallarmé. Considerada una obra bisagra hacia la música del siglo XX por su tratamiento libre de la armonía y el color orquestal, antes que su estructura formal.",
+      "piece1.note": "Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.",
+      "piece2.title": "Sinfonía Fantástica, Op. 14",
+      "piece2.body": "Estrenada en 1830, es una de las obras fundacionales del romanticismo orquestal. Narra en cinco movimientos el delirio pasional de un artista obsesionado, unificados por una \"idea fija\" melódica que reaparece transformada en cada parte.",
+      "piece2.note": "Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.",
+      "piece.factComposer": "Compositor",
+      "piece.factYear": "Año de composición",
+      "piece.factDuration": "Duración aprox.",
+      "piece.factMovements": "Movimientos",
+      "historia.eyebrow": "02 — Institucional",
+      "historia.title": "Historia",
+      "historia.intro": "Reseña institucional de la Orquesta Sinfónica de Entre Ríos.",
+      "historia.lede": "Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.",
+      "historia.p1": "La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.",
+      "historia.p2": "Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.",
+      "historia.note": "Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.",
+      "director.eyebrow": "03 — Dirección artística",
+      "director.title": "Director",
+      "director.photoLabel": "Foto<br>de<br>Luis Gorelik",
+      "director.role": "Director artístico — OSER",
+      "director.p1": "Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.",
+      "director.p2": "Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).",
+      "director.p3": "Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.",
+      "director.h1": "Premio Konex 2009",
+      "director.h2": "Medalla Claudio Arrau · Chile 2005",
+      "director.h3": "Premio Gardel 2014",
+      "director.h4": "Formado en Jerusalén — Academia Rubin",
+      "integrantes.eyebrow": "04 — Nómina",
+      "integrantes.title": "Integrantes",
+      "integrantes.intro": "El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.",
+      "integrantes.cuerdas": "Cuerdas",
+      "integrantes.maderas": "Maderas",
+      "integrantes.metales": "Metales",
+      "integrantes.percusion": "Percusión",
+      "integrantes.musicos": "músicos",
+      "integrantes.thName": "Nombre",
+      "integrantes.thInstr": "Instrumento",
+      "integrantes.thRole": "Atril / Rol",
+      "integrantes.emptyCuerdas": "Completar con la nómina de violines, violas, violonchelos y contrabajos.",
+      "integrantes.emptyMaderas": "Completar con flautas, oboes, clarinetes y fagotes.",
+      "integrantes.emptyMetales": "Completar con trompas, trompetas, trombones y tuba.",
+      "integrantes.emptyPercusion": "Completar con timbales y percusión.",
+      "integrantes.helpNote": "Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.",
+      "footer.left": "Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos",
+      "footer.right": "Centro de Ojos Dr. Lódolo · La Vieja Usina",
+      "search.noResults": "Sin resultados para"
+    },
+    en: {
+      "brand.mobileName": "OSER · Program",
+      "brand.name": "Entre Ríos<br>Symphony Orchestra",
+      "brand.sub": "Concert program",
+      "brand.foot": "Saturday, July 25, 8 PM<br>La Vieja Usina Cultural Center · Paraná",
+      "nav.menu": "Menu",
+      "nav.inicio": "Home",
+      "nav.programa": "Program",
+      "nav.historia": "History",
+      "nav.director": "Conductor",
+      "nav.integrantes": "Members",
+      "search.placeholder": "Search composer, work, musician…",
+      "hero.eyebrow": "Music — Season Concert",
+      "hero.title": "The Symphony<br>at <em>La Vieja Usina</em>",
+      "hero.desc": "The Entre Ríos Symphony Orchestra performs Debussy and Berlioz under the baton of Luis Gorelik, in a sold-out gathering at the cultural heart of Paraná.",
+      "hero.fecha": "Date",
+      "hero.fechaVal": "Sat, July 25",
+      "hero.horario": "Time",
+      "hero.lugar": "Venue",
+      "hero.lugarVal": "La Vieja Usina Cultural Center<br>861 Gregoria Matorras de San Martín, Paraná",
+      "hero.director": "Conductor",
+      "hero.badge": "Free admission — first come, first served",
+      "programa.eyebrow": "01 — Repertoire",
+      "programa.title": "Program",
+      "programa.intro": "Two works in dialogue from opposite ends of French Romanticism: Debussy's impressionist languor and Berlioz's autobiographical excess.",
+      "piece1.title": "Prelude to the Afternoon of a Faun",
+      "piece1.body": "A symphonic poem composed in 1894, inspired by the poem by Stéphane Mallarmé. Considered a hinge work toward 20th-century music for its free treatment of harmony and orchestral color over formal structure.",
+      "piece1.note": "Editable: add performance-specific program notes here if provided by the press team.",
+      "piece2.title": "Symphonie Fantastique, Op. 14",
+      "piece2.body": "Premiered in 1830, it is one of the foundational works of orchestral Romanticism. Across five movements it narrates the passionate delirium of an obsessed artist, unified by a recurring \"idée fixe\" melody transformed in each part.",
+      "piece2.note": "Editable: add performance-specific program notes here if provided by the press team.",
+      "piece.factComposer": "Composer",
+      "piece.factYear": "Year composed",
+      "piece.factDuration": "Approx. duration",
+      "piece.factMovements": "Movements",
+      "historia.eyebrow": "02 — Institutional",
+      "historia.title": "History",
+      "historia.intro": "An institutional overview of the Entre Ríos Symphony Orchestra.",
+      "historia.lede": "A resident orchestra serving the cultural life of Entre Ríos, with more than four decades of uninterrupted history.",
+      "historia.p1": "The Entre Ríos Symphony Orchestra (OSER) is the province's resident musical body, under the Secretariat of Culture of Entre Ríos, dedicated to bringing symphonic repertoire to Paraná and towns across the province.",
+      "historia.p2": "Since 2010 it has been under the artistic direction of Luis Gorelik, a period in which it has expanded its programming, formed alliances with local cultural institutions — such as the La Vieja Usina Cultural Center — and sustained a schedule of free, open-access concerts for the community.",
+      "historia.note": "This text is a reference draft. Replace with the official OSER historical summary once available.",
+      "director.eyebrow": "03 — Artistic Direction",
+      "director.title": "Conductor",
+      "director.photoLabel": "Photo<br>of<br>Luis Gorelik",
+      "director.role": "Artistic Director — OSER",
+      "director.p1": "Artistic Director of the Entre Ríos Symphony Orchestra since 2010, and of the Juan de Dios Filiberto National Orchestra between 2016 and 2018. Born in La Plata, Argentina, in 1963, he trained with Pedro I. Calderón in Buenos Aires and with Mendi Rodán in Israel, graduating with honors from the Rubin Academy of Music in Jerusalem.",
+      "director.p2": "His honors include the Konex Award for Best Conductor of the Decade (2009), the Claudio Arrau Medal for Art and Culture (Chile, 2005), the Music Award presented by Chilean President Ricardo Lagos (2004), and the Gardel Award for Best Classical Music CD with the Entre Ríos Symphony Orchestra (2014).",
+      "director.p3": "He served as Principal Conductor of the Mendoza Philharmonic Orchestra (1985–1988), the Ashdod Chamber Orchestra in Israel (1994–1999), the University of Concepción Symphony Orchestra (2000–2007), and the Salta Symphony Orchestra (2007–2010), before taking up his post at OSER, which he holds to this day.",
+      "director.h1": "Konex Award 2009",
+      "director.h2": "Claudio Arrau Medal · Chile 2005",
+      "director.h3": "Gardel Award 2014",
+      "director.h4": "Trained in Jerusalem — Rubin Academy",
+      "integrantes.eyebrow": "04 — Roster",
+      "integrantes.title": "Members",
+      "integrantes.intro": "The printed program does not include the musician roster. The instrumental sections are ready to be filled in with the actual names.",
+      "integrantes.cuerdas": "Strings",
+      "integrantes.maderas": "Woodwinds",
+      "integrantes.metales": "Brass",
+      "integrantes.percusion": "Percussion",
+      "integrantes.musicos": "musicians",
+      "integrantes.thName": "Name",
+      "integrantes.thInstr": "Instrument",
+      "integrantes.thRole": "Chair / Role",
+      "integrantes.emptyCuerdas": "Fill in with the roster of violins, violas, cellos and double basses.",
+      "integrantes.emptyMaderas": "Fill in with flutes, oboes, clarinets and bassoons.",
+      "integrantes.emptyMetales": "Fill in with horns, trumpets, trombones and tuba.",
+      "integrantes.emptyPercusion": "Fill in with timpani and percussion.",
+      "integrantes.helpNote": "Editable: each empty row can be replaced with &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Instrument&lt;/td&gt;&lt;td&gt;Chair&lt;/td&gt;&lt;/tr&gt; inside the matching &lt;tbody&gt;. The search box automatically indexes any row you add.",
+      "footer.left": "Entre Ríos Symphony Orchestra — Secretariat of Culture of Entre Ríos",
+      "footer.right": "Dr. Lódolo Eye Center · La Vieja Usina",
+      "search.noResults": "No results for"
+    }
+  };
+
+  let currentLang = localStorage.getItem('oser-lang') || 'es';
+
+  function applyLang(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    const dict = i18n[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    localStorage.setItem('oser-lang', lang);
+
+    // Refresh search index + clear any open results with stale-language text
+    index = buildIndex();
+    document.getElementById('searchResults').classList.remove('show');
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>applyLang(btn.dataset.lang));
+  });
+
   // ---------- Mobile menu toggle ----------
   const menuToggle = document.getElementById('menuToggle');
   const mobileMenu = document.getElementById('mobileMenu');
@@ -775,33 +1005,33 @@
   }, {rootMargin:'-40% 0px -50% 0px'});
   sections.forEach(s=>io.observe(s));
 
-  // ---------- Search index ----------
+  // ---------- Search index (language-aware) ----------
   function buildIndex(){
     const items = [];
 
-    // Obras
     document.querySelectorAll('.piece').forEach(piece=>{
+      const title = currentLang === 'en' ? piece.dataset.titleEn : piece.dataset.titleEs;
+      const composer = piece.dataset.composer;
       items.push({
-        type: 'Obra',
-        title: piece.dataset.title,
-        sub: piece.dataset.composer,
+        type: currentLang === 'en' ? 'Work' : 'Obra',
+        title: title,
+        sub: composer,
         el: piece,
-        text: (piece.dataset.title + ' ' + piece.dataset.composer).toLowerCase()
+        text: (title + ' ' + composer).toLowerCase()
       });
     });
 
-    // Secciones (historia / director)
     document.querySelectorAll('main section[data-searchable]').forEach(sec=>{
+      const title = currentLang === 'en' ? sec.dataset.titleEn : sec.dataset.titleEs;
       items.push({
-        type: 'Sección',
-        title: sec.dataset.title,
+        type: currentLang === 'en' ? 'Section' : 'Sección',
+        title: title,
         sub: '',
         el: sec,
-        text: (sec.dataset.title + ' ' + sec.innerText).toLowerCase()
+        text: (title + ' ' + sec.innerText).toLowerCase()
       });
     });
 
-    // Integrantes: filas de tablas
     document.querySelectorAll('table.roster tbody tr').forEach(row=>{
       if(row.classList.contains('roster-empty')) return;
       const cells = row.querySelectorAll('td');
@@ -809,7 +1039,7 @@
       const name = cells[0].innerText.trim();
       const instrument = cells[1].innerText.trim();
       items.push({
-        type: 'Músico',
+        type: currentLang === 'en' ? 'Musician' : 'Músico',
         title: name,
         sub: instrument,
         el: row.closest('details.section-strip') || row,
@@ -829,11 +1059,11 @@
       resultsEl.classList.remove('show');
       return;
     }
-    index = buildIndex(); // refresh in case rows were added
+    index = buildIndex();
     const matches = index.filter(item => item.text.includes(q)).slice(0, 12);
 
     if(matches.length === 0){
-      resultsEl.innerHTML = '<div class="empty">Sin resultados para "'+ escapeHtml(query) +'"</div>';
+      resultsEl.innerHTML = '<div class="empty">'+ i18n[currentLang]['search.noResults'] +' "'+ escapeHtml(query) +'"</div>';
       resultsEl.classList.add('show');
       return;
     }
@@ -881,7 +1111,6 @@
   searchInput.addEventListener('focus', ()=>{ if(searchInput.value) runSearch(searchInput.value, searchResults); });
 
   const searchInputMobile = document.getElementById('searchInputMobile');
-  // Reuse same results panel logic but render inline under mobile input (simple: same behavior, own dropdown)
   const mobileResults = document.createElement('div');
   mobileResults.className = 'search-results';
   mobileResults.style.position = 'static';
@@ -893,7 +1122,8 @@
     mobileResults.style.display = mobileResults.classList.contains('show') ? 'block' : 'none';
   });
 
-  // ---------- Smooth-scroll offset correction not needed (scroll-margin-top handles it) ----------
+  // ---------- Init ----------
+  applyLang(currentLang);
 })();
 </script>
 
