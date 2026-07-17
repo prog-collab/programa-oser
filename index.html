@@ -471,6 +471,136 @@
     .baton{display:none;}
     footer{padding:36px 24px 50px;}
   }
+
+  /* ---------- Floating toolbar ---------- */
+  .float-toolbar{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:300;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+  .float-btn{
+    width:46px;height:46px;
+    border-radius:50%;
+    background:var(--wood);
+    color:#e9e2d3;
+    border:1px solid rgba(233,226,211,0.35);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:18px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.28);
+    font-family:inherit;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .float-btn:hover{background:#4c3c30;}
+  .float-btn:active{transform:scale(0.94);}
+  .float-btn.active{background:var(--brass);color:#fff;}
+
+  .font-controls{
+    display:flex;
+    gap:6px;
+    background:var(--wood);
+    border:1px solid rgba(233,226,211,0.35);
+    border-radius:100px;
+    padding:5px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.28);
+  }
+  .font-controls button{
+    width:36px;height:36px;
+    border-radius:50%;
+    border:none;
+    background:none;
+    color:#e9e2d3;
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .font-controls button:hover{background:rgba(233,226,211,0.12);}
+  .font-controls .fsize-reset{font-size:11px;color:#c2b393;cursor:pointer;}
+
+  .float-panel{
+    background:var(--panel);
+    color:var(--ink);
+    border:1px solid var(--line);
+    border-radius:6px;
+    box-shadow:0 12px 34px rgba(0,0,0,0.3);
+    padding:10px;
+    min-width:190px;
+    display:none;
+  }
+  .float-panel.open{display:block;}
+  .float-panel a{
+    display:block;
+    text-decoration:none;
+    color:var(--ink);
+    font-size:14px;
+    padding:9px 10px;
+    border-radius:4px;
+  }
+  .float-panel a:hover{background:#f0ece0;}
+  .float-panel a .num{
+    font-family:"Courier New",monospace;
+    font-size:10.5px;
+    color:var(--brass-deep);
+    margin-right:6px;
+  }
+
+  .search-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    box-shadow:0 12px 34px rgba(0,0,0,0.3);
+    padding:10px;
+    width:260px;
+    display:none;
+  }
+  .search-panel.open{display:block;}
+  .search-panel .row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .search-panel input{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:8px 10px;
+    font-size:13.5px;
+    font-family:inherit;
+    color:var(--ink);
+    background:var(--paper);
+  }
+  .search-panel input:focus{outline:2px solid var(--focus);outline-offset:1px;}
+  .search-panel .ctrl-btn{
+    width:32px;height:32px;
+    border-radius:4px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    font-size:13px;
+    flex-shrink:0;
+  }
+  .search-panel .ctrl-btn:hover{background:#f0ece0;}
+  .search-panel .count{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-family:"Courier New",monospace;
+    margin-top:8px;
+    text-align:center;
+  }
+
+  mark.page-hit{background:#f1d9ab;color:var(--ink);padding:0 1px;border-radius:2px;}
+  mark.page-hit.active-hit{background:var(--brass);color:#fff;}
+
+  @media (max-width: 880px){
+    .float-toolbar{right:14px;bottom:14px;}
+    .search-panel{width:calc(100vw - 90px);max-width:280px;}
+  }
 </style>
 </head>
 <body>
@@ -617,12 +747,13 @@
 
       <div class="historia-grid">
         <div>
-          <p class="lede" data-i18n="historia.lede">Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.</p>
-          <p data-i18n="historia.p1">La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.</p>
+          <p class="lede" data-i18n="historia.lede">Creada oficialmente en 1948, la OSER es el organismo musical estable de la provincia de Entre Ríos.</p>
+          <p data-i18n="historia.p1">La Orquesta Sinfónica de Entre Ríos (OSER), organismo de la Secretaría de Cultura de Entre Ríos, tiene antecedentes en distintos grupos y ensambles surgidos en Paraná a principios del siglo XX. En sus primeros años fue dirigida por Francisco Garcilazo, Severo Sánchez, Eugenio Orlando y Armando Bariglola. Desde 1954 la condujo el maestro Oscar Giudice durante 20 años, sucedido por José Carlos Carminio Castagno y luego por Reinaldo Zemba, director durante treinta y dos temporadas. En marzo de 2010 el Gobierno de Entre Ríos designó a Luis Gorelik como Director Artístico, cargo que ejerce hasta la fecha.</p>
+          <p data-i18n="historia.p2">La OSER se destaca entre las orquestas argentinas por su compromiso permanente con el público de su provincia, manteniendo a lo largo de su historia una presencia continua en todo el territorio entrerriano y en distintos puntos del país. En Buenos Aires se ha presentado en el Teatro Colón, Tecnópolis y el CCK (hoy Palacio Libertad), y también en Ushuaia (2014). En 2013, con el auspicio del CFI, grabó el CD <em>Poema fluvial</em> —tres obras sinfónicas inspiradas en el río Paraná—, que recibió el Premio Gardel al Mejor CD de Música Clásica.</p>
         </div>
         <div>
-          <p data-i18n="historia.p2">Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.</p>
-          <span class="editable-note" data-i18n="historia.note">Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.</span>
+          <p data-i18n="historia.p3">En 2018, al cumplir 70 años, la OSER recibió en un trabajo conjunto con el IAPSER a artistas invitados de nivel internacional como Martha Argerich, Chango Spasiuk, Rafael Gintoli, Nahuel Pennisi, Rolando Goldman, Gabriel Said y Eduardo Isaac, entre otros. En 2019 recibió la Mención de Honor Senador Domingo Faustino Sarmiento del Senado de la Nación Argentina y el Premio Konex, Diploma al Mérito, como Mejor Orquesta de la Década.</p>
+          <p data-i18n="historia.p4">La orquesta lleva adelante el ciclo <em>A Toda Orquesta</em>, al que asisten anualmente más de 20.000 alumnos de nivel preescolar, primario y secundario de escuelas públicas y privadas de la provincia. Continúa además con presentaciones en distintas localidades entrerrianas y con una nutrida temporada internacional desarrollada junto a embajadas e instituciones culturales de diversos países.</p>
         </div>
       </div>
     </section>
@@ -642,6 +773,8 @@
             <p data-i18n="director.p1">Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.</p>
             <p data-i18n="director.p2">Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).</p>
             <p data-i18n="director.p3">Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.</p>
+            <p data-i18n="director.p4">Se ha desempeñado como director invitado, entre otras, de la Orquesta Filarmónica de Israel, la Orquesta Nacional de Islandia, la Orquesta Filarmónica de Eslovenia, la Orquesta Filarmónica de Sofía, la Orquesta Radio y TV Nacional de Serbia, la Orquesta Estable del Teatro Colón, la Orquesta Sinfónica Nacional de Argentina, las Sinfónicas Nacionales de Cuba, Colombia, Chile y Venezuela, la Filarmónica de Bogotá, la Orquesta del Estado de México, la OSUSP (Brasil), la Orquesta Sinfónica de Guanajuato, la Orquesta Sinfónica Siciliana (Italia), la Orquesta Filarmónica de Buenos Aires, la OFUNAM y la Orquesta de Cámara de Bellas Artes (México), el SODRE y la Filarmónica de Montevideo (Uruguay), el Teatro Municipal de São Paulo, el Teatro Municipal de Santiago de Chile, el Teatro Argentino de La Plata, las óperas Báltycka y Krakowska (Polonia), el Teatro Nacional de Macedonia, el Teatro Estatal de Saarbrücken (Alemania) y el Béjart Ballet Lausanne (Suiza), entre muchas otras.</p>
+            <p data-i18n="director.p5">Es Profesor Titular de la Cátedra de Dirección Orquestal en el Departamento de Artes Musicales y Sonoras de la Universidad Nacional de las Artes, y entre marzo de 2011 y diciembre de 2023 condujo semanalmente el programa radial <em>Tarde transfigurada</em> por Radio Nacional Clásica 96.7.</p>
           </div>
           <div class="director-highlights">
             <span data-i18n="director.h1">Premio Konex 2009</span>
@@ -657,73 +790,215 @@
     <section id="integrantes">
       <p class="eyebrow" data-i18n="integrantes.eyebrow">04 — Nómina</p>
       <h2 data-i18n="integrantes.title">Integrantes</h2>
-      <p class="section-intro" data-i18n="integrantes.intro">El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.</p>
+      <p class="section-intro" data-i18n="integrantes.intro">Nómina completa de la orquesta y del equipo de producción, según el programa de sala oficial.</p>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name" data-i18n="integrantes.cuerdas">Cuerdas</span>
+          <span class="st-name" data-i18n="integrantes.cuerdas">X</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="st-count"><span class="count-num">47</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
           <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyCuerdas">Completar con la nómina de violines, violas, violonchelos y contrabajos.</td></tr>
+            <tr><td>Raúl Vallejos</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td><span class="i18n-cell" data-cell="Concertino">Concertino</span></td></tr>
+            <tr><td>Julieta Astudillo</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Ilia Zakolodkin</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Juan Samuel Giustozzi</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Miguel Vallejos</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Margarita Costanza</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Ana Motta</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Ronald Bourquin</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Diego González</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Alejandro Rodrigo</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Emilia Brumnich</td><td><span class="i18n-cell" data-cell="Violín I">Violín I</span></td><td></td></tr>
+            <tr><td>Pablo Zamora</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Juan Pablo Arizpe</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td><span class="i18n-cell" data-cell="Solista adjunto">Solista adjunto</span></td></tr>
+            <tr><td>Fernanda Pozzobon</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Sebastián Orlando</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Hernán Rodríguez</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Soledad Rodríguez</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Martín Larraburu</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Ana Giustozzi</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Pablo Arcoba</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Martín Ocampo</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Juan José Guimarans</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Emanuel Ramos</td><td><span class="i18n-cell" data-cell="Violín II">Violín II</span></td><td></td></tr>
+            <tr><td>Alejandra Cepeda</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Gabriel Mateos</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td><span class="i18n-cell" data-cell="Solista adjunto">Solista adjunto</span></td></tr>
+            <tr><td>Adrián Dvoracek</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Galina Merjuryeva</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Lucrecia Morisse</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td></td></tr>
+            <tr><td>Santiago Franchi</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td></td></tr>
+            <tr><td>Marcelo Barolin</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td></td></tr>
+            <tr><td>Elena Escobar</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td></td></tr>
+            <tr><td>Romina Lallana</td><td><span class="i18n-cell" data-cell="Viola">Viola</span></td><td></td></tr>
+            <tr><td>Jorge Revello</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Georgina Mussin</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td><span class="i18n-cell" data-cell="Solista adjunto">Solista adjunto</span></td></tr>
+            <tr><td>Andrea Cepeda</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Emanuel Aguirrez</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Julia Avedutto</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td></td></tr>
+            <tr><td>Walter Álvarez</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td></td></tr>
+            <tr><td>Federico Bidart</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td></td></tr>
+            <tr><td>Carla Francile</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td></td></tr>
+            <tr><td>Mauro Bertiche</td><td><span class="i18n-cell" data-cell="Violonchelo">Violonchelo</span></td><td></td></tr>
+            <tr><td>Carolina Melchiori</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Abel Rodríguez</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td><span class="i18n-cell" data-cell="Solista adjunto">Solista adjunto</span></td></tr>
+            <tr><td>Heraldo Botta</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Miguel Cicazzo</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td></td></tr>
+            <tr><td>Guillermo Trobbiani</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td></td></tr>
+            <tr><td>Roberto Zapata</td><td><span class="i18n-cell" data-cell="Contrabajo">Contrabajo</span></td><td></td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name" data-i18n="integrantes.maderas">Maderas</span>
+          <span class="st-name" data-i18n="integrantes.maderas">X</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="st-count"><span class="count-num">12</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
           <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyMaderas">Completar con flautas, oboes, clarinetes y fagotes.</td></tr>
+            <tr><td>Cristian Garreffa</td><td><span class="i18n-cell" data-cell="Flauta">Flauta</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Luis Barbiero</td><td><span class="i18n-cell" data-cell="Flauta">Flauta</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Alberto Sire</td><td><span class="i18n-cell" data-cell="Flauta">Flauta</span></td><td></td></tr>
+            <tr><td>Juan Sarmiento Wagner</td><td><span class="i18n-cell" data-cell="Oboe">Oboe</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Carla Dipp</td><td><span class="i18n-cell" data-cell="Oboe">Oboe</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Mariano Amín</td><td><span class="i18n-cell" data-cell="Oboe">Oboe</span></td><td></td></tr>
+            <tr><td>Mariano Laurino</td><td><span class="i18n-cell" data-cell="Clarinete">Clarinete</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Omar Lacuadra</td><td><span class="i18n-cell" data-cell="Clarinete">Clarinete</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Eugenio Zeppa</td><td><span class="i18n-cell" data-cell="Clarinete">Clarinete</span></td><td></td></tr>
+            <tr><td>Federico Sardi</td><td><span class="i18n-cell" data-cell="Fagot">Fagot</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
+            <tr><td>Alejandro Tomaino</td><td><span class="i18n-cell" data-cell="Fagot">Fagot</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Walter Vega</td><td><span class="i18n-cell" data-cell="Fagot">Fagot</span></td><td></td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name" data-i18n="integrantes.metales">Metales</span>
+          <span class="st-name" data-i18n="integrantes.metales">X</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="st-count"><span class="count-num">12</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
           <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyMetales">Completar con trompas, trompetas, trombones y tuba.</td></tr>
+            <tr><td>Scott Bohannon</td><td><span class="i18n-cell" data-cell="Corno">Corno</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Germán López</td><td><span class="i18n-cell" data-cell="Corno">Corno</span></td><td></td></tr>
+            <tr><td>Lucas Ahumada</td><td><span class="i18n-cell" data-cell="Corno">Corno</span></td><td></td></tr>
+            <tr><td>Samuel Herrera</td><td><span class="i18n-cell" data-cell="Corno">Corno</span></td><td><span class="i18n-cell" data-cell=""></span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
+            <tr><td>Sergio Quattrociocchi</td><td><span class="i18n-cell" data-cell="Trompeta">Trompeta</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Ezequiel Parola</td><td><span class="i18n-cell" data-cell="Trompeta">Trompeta</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Lucas Cantarutti</td><td><span class="i18n-cell" data-cell="Trompeta">Trompeta</span></td><td></td></tr>
+            <tr><td>Joel Canalis</td><td><span class="i18n-cell" data-cell="Trompeta">Trompeta</span></td><td><span class="i18n-cell" data-cell=""></span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
+            <tr><td>Mariano García</td><td><span class="i18n-cell" data-cell="Trombón">Trombón</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Guillermo Almirón</td><td><span class="i18n-cell" data-cell="Trombón">Trombón</span></td><td><span class="i18n-cell" data-cell=""></span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
+            <tr><td>Santiago Salomón</td><td><span class="i18n-cell" data-cell="Trombón">Trombón</span></td><td><span class="i18n-cell" data-cell=""></span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
+            <tr><td>William Castillo</td><td><span class="i18n-cell" data-cell="Tuba">Tuba</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
           </tbody>
         </table>
       </details>
 
       <details class="section-strip">
         <summary>
-          <span class="st-name" data-i18n="integrantes.percusion">Percusión</span>
+          <span class="st-name" data-i18n="integrantes.percusion">X</span>
           <span style="display:flex;align-items:center;gap:14px;">
-            <span class="st-count"><span class="count-num">0</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="st-count"><span class="count-num">5</span> <span data-i18n="integrantes.musicos">músicos</span></span>
             <span class="chev">+</span>
           </span>
         </summary>
         <table class="roster">
           <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
           <tbody>
-            <tr class="roster-empty"><td colspan="3" data-i18n="integrantes.emptyPercusion">Completar con timbales y percusión.</td></tr>
+            <tr><td>Pablo Bagilet</td><td><span class="i18n-cell" data-cell="Timbal / Percusión">Timbal / Percusión</span></td><td><span class="i18n-cell" data-cell="Solista">Solista</span></td></tr>
+            <tr><td>Francisco Vergara Moya</td><td><span class="i18n-cell" data-cell="Timbal / Percusión">Timbal / Percusión</span></td><td><span class="i18n-cell" data-cell="Suplente de solista">Suplente de solista</span></td></tr>
+            <tr><td>Mauricio Bernal</td><td><span class="i18n-cell" data-cell="Timbal / Percusión">Timbal / Percusión</span></td><td></td></tr>
+            <tr><td>Andrea García</td><td><span class="i18n-cell" data-cell="Timbal / Percusión">Timbal / Percusión</span></td><td></td></tr>
+            <tr><td>Lucía Cicazzo</td><td><span class="i18n-cell" data-cell="Timbal / Percusión">Timbal / Percusión</span></td><td><span class="i18n-cell" data-cell=""></span> <span title="Personal contratado / Contracted musician">*</span></td></tr>
           </tbody>
         </table>
       </details>
 
-      <p class="editable-note" data-i18n="integrantes.helpNote">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. Agregá las filas directamente a la tabla.</p>
+      <details class="section-strip">
+        <summary>
+          <span class="st-name" data-i18n="integrantes.otros">X</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count"><span class="count-num">2</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Florencia Arizpe</td><td><span class="i18n-cell" data-cell="Arpa">Arpa</span></td><td></td></tr>
+            <tr><td>Celina Federik</td><td><span class="i18n-cell" data-cell="Piano y celesta">Piano y celesta</span></td><td></td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name" data-i18n="integrantes.equipo">X</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count"><span class="count-num">19</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Yamil Isaac</td><td><span class="i18n-cell" data-cell="Archivo y copistería">Archivo y copistería</span></td><td></td></tr>
+            <tr><td>Carla Ábalos</td><td><span class="i18n-cell" data-cell="Archivo y copistería">Archivo y copistería</span></td><td></td></tr>
+            <tr><td>Gabriel Osán</td><td><span class="i18n-cell" data-cell="Técnico utilero">Técnico utilero</span></td><td></td></tr>
+            <tr><td>Hernán Gómez</td><td><span class="i18n-cell" data-cell="Técnico utilero">Técnico utilero</span></td><td></td></tr>
+            <tr><td>Nicolás Arceguet</td><td><span class="i18n-cell" data-cell="Técnico utilero">Técnico utilero</span></td><td></td></tr>
+            <tr><td>Luciano Quiroga</td><td><span class="i18n-cell" data-cell="Técnico utilero">Técnico utilero</span></td><td></td></tr>
+            <tr><td>Paula Ost</td><td><span class="i18n-cell" data-cell="Prensa y difusión">Prensa y difusión</span></td><td></td></tr>
+            <tr><td>Juan Manuel Lavini</td><td><span class="i18n-cell" data-cell="Administración">Administración</span></td><td><span class="i18n-cell" data-cell="Director Técnico Administrativo">Director Técnico Administrativo</span></td></tr>
+            <tr><td>Roxana Susán</td><td><span class="i18n-cell" data-cell="Administración">Administración</span></td><td><span class="i18n-cell" data-cell="Jefa Dpto. Administración">Jefa Dpto. Administración</span></td></tr>
+            <tr><td>Soledad Salvarredy</td><td><span class="i18n-cell" data-cell="Administración">Administración</span></td><td><span class="i18n-cell" data-cell="Asesora legal">Asesora legal</span></td></tr>
+            <tr><td>Adrián Sola</td><td><span class="i18n-cell" data-cell="Administración">Administración</span></td><td></td></tr>
+            <tr><td>Sebastián Cabrera Noro</td><td><span class="i18n-cell" data-cell="Administración">Administración</span></td><td></td></tr>
+            <tr><td>Luciano Mete</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Coordinador Área de Comunicación">Coordinador Área de Comunicación</span></td></tr>
+            <tr><td>Virginia Lescano</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Gráfica y contenidos">Gráfica y contenidos</span></td></tr>
+            <tr><td>Lorena Cabello</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Gráfica y contenidos">Gráfica y contenidos</span></td></tr>
+            <tr><td>Constanza Tizzoni</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Gráfica y contenidos">Gráfica y contenidos</span></td></tr>
+            <tr><td>Julián Villarraza</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Gráfica y contenidos">Gráfica y contenidos</span></td></tr>
+            <tr><td>Carolina Cometti</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Redes">Redes</span></td></tr>
+            <tr><td>Aldana Badano</td><td><span class="i18n-cell" data-cell="Comunicación Secretaría de Cultura ER">Comunicación Secretaría de Cultura ER</span></td><td><span class="i18n-cell" data-cell="Redes">Redes</span></td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name" data-i18n="integrantes.autoridades">X</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count"><span class="count-num">4</span> <span data-i18n="integrantes.musicos">músicos</span></span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th data-i18n="integrantes.thName">Nombre</th><th data-i18n="integrantes.thInstr">Instrumento</th><th data-i18n="integrantes.thRole">Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Rogelio Frigerio</td><td><span class="i18n-cell" data-cell="Autoridades provinciales">Autoridades provinciales</span></td><td><span class="i18n-cell" data-cell="Gobernador de Entre Ríos">Gobernador de Entre Ríos</span></td></tr>
+            <tr><td>Alicia Aluani</td><td><span class="i18n-cell" data-cell="Autoridades provinciales">Autoridades provinciales</span></td><td><span class="i18n-cell" data-cell="Vicegobernadora de Entre Ríos">Vicegobernadora de Entre Ríos</span></td></tr>
+            <tr><td>Manuel Troncoso</td><td><span class="i18n-cell" data-cell="Autoridades provinciales">Autoridades provinciales</span></td><td><span class="i18n-cell" data-cell="Ministro de Gobierno y Trabajo">Ministro de Gobierno y Trabajo</span></td></tr>
+            <tr><td>Julián Stoppello</td><td><span class="i18n-cell" data-cell="Autoridades provinciales">Autoridades provinciales</span></td><td><span class="i18n-cell" data-cell="Secretario de Cultura">Secretario de Cultura</span></td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <p class="editable-note" data-i18n="integrantes.sourceNote">Nómina completa según el programa de sala oficial (25 de julio de 2026). * Personal contratado.</p>
     </section>
 
     <footer>
@@ -732,6 +1007,36 @@
     </footer>
 
   </main>
+</div>
+
+<!-- ================= FLOATING TOOLBAR ================= -->
+<div class="float-toolbar">
+
+  <div class="search-panel" id="searchPanel">
+    <div class="row">
+      <input type="text" id="pageSearchInput" placeholder="Buscar en la página…" data-i18n-placeholder="floatSearch.placeholder" autocomplete="off" aria-label="Buscar palabras en la página">
+      <button class="ctrl-btn" id="searchPrev" title="Anterior" aria-label="Resultado anterior">↑</button>
+      <button class="ctrl-btn" id="searchNext" title="Siguiente" aria-label="Resultado siguiente">↓</button>
+    </div>
+    <div class="count" id="searchCount"></div>
+  </div>
+
+  <div class="float-panel" id="menuPanel">
+    <a href="#inicio"><span class="num">00</span><span data-i18n="nav.inicio">Inicio</span></a>
+    <a href="#programa"><span class="num">01</span><span data-i18n="nav.programa">Programa</span></a>
+    <a href="#historia"><span class="num">02</span><span data-i18n="nav.historia">Historia</span></a>
+    <a href="#director"><span class="num">03</span><span data-i18n="nav.director">Director</span></a>
+    <a href="#integrantes"><span class="num">04</span><span data-i18n="nav.integrantes">Integrantes</span></a>
+  </div>
+
+  <div class="font-controls" aria-label="Tamaño de fuente">
+    <button type="button" id="fontDecrease" title="Reducir texto" aria-label="Reducir tamaño de texto">A−</button>
+    <button type="button" class="fsize-reset" id="fontReset" title="Restablecer tamaño" aria-label="Restablecer tamaño de texto">100%</button>
+    <button type="button" id="fontIncrease" title="Ampliar texto" aria-label="Ampliar tamaño de texto">A+</button>
+  </div>
+
+  <button type="button" class="float-btn" id="searchToggle" title="Buscar en la página" aria-label="Buscar en la página" aria-expanded="false">🔍</button>
+  <button type="button" class="float-btn" id="menuFloatToggle" title="Menú" aria-label="Abrir menú de secciones" aria-expanded="false">☰</button>
 </div>
 
 <script>
@@ -778,10 +1083,11 @@
       "historia.eyebrow": "02 — Institucional",
       "historia.title": "Historia",
       "historia.intro": "Reseña institucional de la Orquesta Sinfónica de Entre Ríos.",
-      "historia.lede": "Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.",
-      "historia.p1": "La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.",
-      "historia.p2": "Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.",
-      "historia.note": "Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.",
+      "historia.lede": "Creada oficialmente en 1948, la OSER es el organismo musical estable de la provincia de Entre Ríos.",
+      "historia.p1": "La Orquesta Sinfónica de Entre Ríos (OSER), organismo de la Secretaría de Cultura de Entre Ríos, tiene antecedentes en distintos grupos y ensambles surgidos en Paraná a principios del siglo XX. En sus primeros años fue dirigida por Francisco Garcilazo, Severo Sánchez, Eugenio Orlando y Armando Bariglola. Desde 1954 la condujo el maestro Oscar Giudice durante 20 años, sucedido por José Carlos Carminio Castagno y luego por Reinaldo Zemba, director durante treinta y dos temporadas. En marzo de 2010 el Gobierno de Entre Ríos designó a Luis Gorelik como Director Artístico, cargo que ejerce hasta la fecha.",
+      "historia.p2": "La OSER se destaca entre las orquestas argentinas por su compromiso permanente con el público de su provincia, manteniendo a lo largo de su historia una presencia continua en todo el territorio entrerriano y en distintos puntos del país. En Buenos Aires se ha presentado en el Teatro Colón, Tecnópolis y el CCK (hoy Palacio Libertad), y también en Ushuaia (2014). En 2013, con el auspicio del CFI, grabó el CD <em>Poema fluvial</em> —tres obras sinfónicas inspiradas en el río Paraná—, que recibió el Premio Gardel al Mejor CD de Música Clásica.",
+      "historia.p3": "En 2018, al cumplir 70 años, la OSER recibió en un trabajo conjunto con el IAPSER a artistas invitados de nivel internacional como Martha Argerich, Chango Spasiuk, Rafael Gintoli, Nahuel Pennisi, Rolando Goldman, Gabriel Said y Eduardo Isaac, entre otros. En 2019 recibió la Mención de Honor Senador Domingo Faustino Sarmiento del Senado de la Nación Argentina y el Premio Konex, Diploma al Mérito, como Mejor Orquesta de la Década.",
+      "historia.p4": "La orquesta lleva adelante el ciclo <em>A Toda Orquesta</em>, al que asisten anualmente más de 20.000 alumnos de nivel preescolar, primario y secundario de escuelas públicas y privadas de la provincia. Continúa además con presentaciones en distintas localidades entrerrianas y con una nutrida temporada internacional desarrollada junto a embajadas e instituciones culturales de diversos países.",
       "director.eyebrow": "03 — Dirección artística",
       "director.title": "Director",
       "director.photoLabel": "Foto<br>de<br>Luis Gorelik",
@@ -789,28 +1095,30 @@
       "director.p1": "Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.",
       "director.p2": "Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).",
       "director.p3": "Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.",
+      "director.p4": "Se ha desempeñado como director invitado, entre otras, de la Orquesta Filarmónica de Israel, la Orquesta Nacional de Islandia, la Orquesta Filarmónica de Eslovenia, la Orquesta Filarmónica de Sofía, la Orquesta Radio y TV Nacional de Serbia, la Orquesta Estable del Teatro Colón, la Orquesta Sinfónica Nacional de Argentina, las Sinfónicas Nacionales de Cuba, Colombia, Chile y Venezuela, la Filarmónica de Bogotá, la Orquesta del Estado de México, la OSUSP (Brasil), la Orquesta Sinfónica de Guanajuato, la Orquesta Sinfónica Siciliana (Italia), la Orquesta Filarmónica de Buenos Aires, la OFUNAM y la Orquesta de Cámara de Bellas Artes (México), el SODRE y la Filarmónica de Montevideo (Uruguay), el Teatro Municipal de São Paulo, el Teatro Municipal de Santiago de Chile, el Teatro Argentino de La Plata, las óperas Báltycka y Krakowska (Polonia), el Teatro Nacional de Macedonia, el Teatro Estatal de Saarbrücken (Alemania) y el Béjart Ballet Lausanne (Suiza), entre muchas otras.",
+      "director.p5": "Es Profesor Titular de la Cátedra de Dirección Orquestal en el Departamento de Artes Musicales y Sonoras de la Universidad Nacional de las Artes, y entre marzo de 2011 y diciembre de 2023 condujo semanalmente el programa radial <em>Tarde transfigurada</em> por Radio Nacional Clásica 96.7.",
       "director.h1": "Premio Konex 2009",
       "director.h2": "Medalla Claudio Arrau · Chile 2005",
       "director.h3": "Premio Gardel 2014",
       "director.h4": "Formado en Jerusalén — Academia Rubin",
       "integrantes.eyebrow": "04 — Nómina",
       "integrantes.title": "Integrantes",
-      "integrantes.intro": "El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.",
+      "integrantes.intro": "Nómina completa de la orquesta y del equipo de producción, según el programa de sala oficial.",
       "integrantes.cuerdas": "Cuerdas",
       "integrantes.maderas": "Maderas",
       "integrantes.metales": "Metales",
       "integrantes.percusion": "Percusión",
-      "integrantes.musicos": "músicos",
+      "integrantes.otros": "Otros instrumentos",
+      "integrantes.equipo": "Equipo de producción",
+      "integrantes.autoridades": "Autoridades",
+      "integrantes.musicos": "integrantes",
       "integrantes.thName": "Nombre",
       "integrantes.thInstr": "Instrumento",
       "integrantes.thRole": "Atril / Rol",
-      "integrantes.emptyCuerdas": "Completar con la nómina de violines, violas, violonchelos y contrabajos.",
-      "integrantes.emptyMaderas": "Completar con flautas, oboes, clarinetes y fagotes.",
-      "integrantes.emptyMetales": "Completar con trompas, trompetas, trombones y tuba.",
-      "integrantes.emptyPercusion": "Completar con timbales y percusión.",
-      "integrantes.helpNote": "Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. Agregá las filas directamente a la tabla.",
+      "integrantes.sourceNote": "Nómina completa según el programa de sala oficial (25 de julio de 2026). * Personal contratado.",
       "footer.left": "Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos",
-      "footer.right": "Centro de Ojos Dr. Lódolo · La Vieja Usina",
+      "footer.right": "Centro de Ojos Dr. Lódolo · La Vieja Usina · Foto de tapa: Alejandro Astorga",
+      "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
       "brand.mobileName": "OSER · Program",
@@ -849,10 +1157,11 @@
       "historia.eyebrow": "02 — Institutional",
       "historia.title": "History",
       "historia.intro": "An institutional overview of the Entre Ríos Symphony Orchestra.",
-      "historia.lede": "A resident orchestra serving the cultural life of Entre Ríos, with more than four decades of uninterrupted history.",
-      "historia.p1": "The Entre Ríos Symphony Orchestra (OSER) is the province's resident musical body, under the Secretariat of Culture of Entre Ríos, dedicated to bringing symphonic repertoire to Paraná and towns across the province.",
-      "historia.p2": "Since 2010 it has been under the artistic direction of Luis Gorelik, a period in which it has expanded its programming, formed alliances with local cultural institutions — such as the La Vieja Usina Cultural Center — and sustained a schedule of free, open-access concerts for the community.",
-      "historia.note": "This text is a reference draft. Replace with the official OSER historical summary once available.",
+      "historia.lede": "Officially founded in 1948, OSER is the resident musical body of the province of Entre Ríos.",
+      "historia.p1": "The Entre Ríos Symphony Orchestra (OSER), a body of the Secretariat of Culture of Entre Ríos, traces its roots to various groups and ensembles that emerged in Paraná in the early 20th century. In its first years it was led by Francisco Garcilazo, Severo Sánchez, Eugenio Orlando and Armando Bariglola. From 1954, Maestro Oscar Giudice conducted it for 20 years, succeeded by José Carlos Carminio Castagno and later by Reinaldo Zemba, who served as conductor for thirty-two seasons. In March 2010 the Government of Entre Ríos appointed Luis Gorelik as Artistic Director, a post he still holds.",
+      "historia.p2": "OSER stands out among Argentine orchestras for its lasting commitment to the public of its province, maintaining a continuous presence throughout Entre Ríos and across the country. In Buenos Aires it has performed at the Teatro Colón, Tecnópolis and the CCK (now Palacio Libertad), and also in Ushuaia (2014). In 2013, with support from the CFI, it recorded the album <em>Poema fluvial</em> — three symphonic works inspired by the Paraná River — which won the Gardel Award for Best Classical Music Album.",
+      "historia.p3": "In 2018, marking its 70th anniversary, OSER partnered with IAPSER to host internationally renowned guest artists such as Martha Argerich, Chango Spasiuk, Rafael Gintoli, Nahuel Pennisi, Rolando Goldman, Gabriel Said and Eduardo Isaac, among others. In 2019 it received the Senator Domingo Faustino Sarmiento Honorary Mention from the Argentine National Senate and the Konex Award, Diploma of Merit, as Orchestra of the Decade.",
+      "historia.p4": "The orchestra runs the <em>A Toda Orquesta</em> outreach program, attended each year by more than 20,000 preschool, primary and secondary students from public and private schools across the province. It also continues to perform in towns throughout Entre Ríos and maintains a busy international season developed with embassies and cultural institutions from various countries.",
       "director.eyebrow": "03 — Artistic Direction",
       "director.title": "Conductor",
       "director.photoLabel": "Photo<br>of<br>Luis Gorelik",
@@ -860,30 +1169,87 @@
       "director.p1": "Artistic Director of the Entre Ríos Symphony Orchestra since 2010, and of the Juan de Dios Filiberto National Orchestra between 2016 and 2018. Born in La Plata, Argentina, in 1963, he trained with Pedro I. Calderón in Buenos Aires and with Mendi Rodán in Israel, graduating with honors from the Rubin Academy of Music in Jerusalem.",
       "director.p2": "His honors include the Konex Award for Best Conductor of the Decade (2009), the Claudio Arrau Medal for Art and Culture (Chile, 2005), the Music Award presented by Chilean President Ricardo Lagos (2004), and the Gardel Award for Best Classical Music CD with the Entre Ríos Symphony Orchestra (2014).",
       "director.p3": "He served as Principal Conductor of the Mendoza Philharmonic Orchestra (1985–1988), the Ashdod Chamber Orchestra in Israel (1994–1999), the University of Concepción Symphony Orchestra (2000–2007), and the Salta Symphony Orchestra (2007–2010), before taking up his post at OSER, which he holds to this day.",
+      "director.p4": "He has appeared as guest conductor with, among others, the Israel Philharmonic Orchestra, the Iceland Symphony Orchestra, the Slovenian Philharmonic, the Sofia Philharmonic, the Radio and TV of Serbia Symphony Orchestra, the resident orchestra of the Teatro Colón, the National Symphony Orchestra of Argentina, the national symphonies of Cuba, Colombia, Chile and Venezuela, the Bogotá Philharmonic, the State of Mexico Symphony Orchestra, OSUSP (Brazil), the Guanajuato Symphony Orchestra, the Sicilian Symphony Orchestra (Italy), the Buenos Aires Philharmonic, OFUNAM and the Bellas Artes Chamber Orchestra (Mexico), SODRE and the Montevideo Philharmonic (Uruguay), the Municipal Theatre of São Paulo, the Municipal Theatre of Santiago de Chile, the Teatro Argentino de La Plata, the Baltycka and Krakowska operas (Poland), the National Theatre of Macedonia, the Saarbrücken State Theatre (Germany) and the Béjart Ballet Lausanne (Switzerland), among many others.",
+      "director.p5": "He is a Professor of Orchestral Conducting at the Department of Musical and Sound Arts of the Universidad Nacional de las Artes, and from March 2011 to December 2023 hosted the weekly radio program <em>Tarde transfigurada</em> on Radio Nacional Clásica 96.7.",
       "director.h1": "Konex Award 2009",
       "director.h2": "Claudio Arrau Medal · Chile 2005",
       "director.h3": "Gardel Award 2014",
       "director.h4": "Trained in Jerusalem — Rubin Academy",
       "integrantes.eyebrow": "04 — Roster",
       "integrantes.title": "Members",
-      "integrantes.intro": "The printed program does not include the musician roster. The instrumental sections are ready to be filled in with the actual names.",
+      "integrantes.intro": "Full roster of the orchestra and production team, as listed in the official concert program.",
       "integrantes.cuerdas": "Strings",
       "integrantes.maderas": "Woodwinds",
       "integrantes.metales": "Brass",
       "integrantes.percusion": "Percussion",
-      "integrantes.musicos": "musicians",
+      "integrantes.otros": "Other instruments",
+      "integrantes.equipo": "Production team",
+      "integrantes.autoridades": "Provincial authorities",
+      "integrantes.musicos": "members",
       "integrantes.thName": "Name",
       "integrantes.thInstr": "Instrument",
       "integrantes.thRole": "Chair / Role",
-      "integrantes.emptyCuerdas": "Fill in with the roster of violins, violas, cellos and double basses.",
-      "integrantes.emptyMaderas": "Fill in with flutes, oboes, clarinets and bassoons.",
-      "integrantes.emptyMetales": "Fill in with horns, trumpets, trombones and tuba.",
-      "integrantes.emptyPercusion": "Fill in with timpani and percussion.",
-      "integrantes.helpNote": "Editable: each empty row can be replaced with &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Instrument&lt;/td&gt;&lt;td&gt;Chair&lt;/td&gt;&lt;/tr&gt; inside the matching &lt;tbody&gt;. Add rows directly to the table.",
+      "integrantes.sourceNote": "Full roster as listed in the official concert program (July 25, 2026). * Contracted musician.",
       "footer.left": "Entre Ríos Symphony Orchestra — Secretariat of Culture of Entre Ríos",
-      "footer.right": "Dr. Lódolo Eye Center · La Vieja Usina",
+      "footer.right": "Dr. Lódolo Eye Center · La Vieja Usina · Cover photo: Alejandro Astorga",
+      "floatSearch.placeholder": "Search this page…",
     }
   };
+
+  // Instrument & role labels used inside the roster tables (kept out of the
+  // main i18n dict since they repeat across many rows).
+  const cellMap = {
+    en: {
+      "Violín I": "Violin I",
+      "Violín II": "Violin II",
+      "Viola": "Viola",
+      "Violonchelo": "Cello",
+      "Contrabajo": "Double bass",
+      "Flauta": "Flute",
+      "Oboe": "Oboe",
+      "Clarinete": "Clarinet",
+      "Fagot": "Bassoon",
+      "Corno": "Horn",
+      "Trompeta": "Trumpet",
+      "Trombón": "Trombone",
+      "Tuba": "Tuba",
+      "Timbal / Percusión": "Timpani / Percussion",
+      "Arpa": "Harp",
+      "Piano y celesta": "Piano and celesta",
+      "Archivo y copistería": "Archive & copying",
+      "Técnico utilero": "Stage technician",
+      "Prensa y difusión": "Press & outreach",
+      "Administración": "Administration",
+      "Comunicación Secretaría de Cultura ER": "Communications, Secretariat of Culture ER",
+      "Autoridades provinciales": "Provincial authorities",
+      "Concertino": "Concertmaster",
+      "Solista": "Principal",
+      "Solista adjunto": "Associate principal",
+      "Suplente de solista": "Assistant principal",
+      "Director Técnico Administrativo": "Technical & Administrative Director",
+      "Jefa Dpto. Administración": "Head of Administration",
+      "Asesora legal": "Legal advisor",
+      "Coordinador Área de Comunicación": "Communications Coordinator",
+      "Gráfica y contenidos": "Graphics & content",
+      "Redes": "Social media",
+      "Gobernador de Entre Ríos": "Governor of Entre Ríos",
+      "Vicegobernadora de Entre Ríos": "Vice Governor of Entre Ríos",
+      "Ministro de Gobierno y Trabajo": "Minister of Government and Labor",
+      "Secretario de Cultura": "Secretary of Culture"
+    }
+  };
+
+  function translateCells(lang){
+    document.querySelectorAll('.i18n-cell').forEach(el=>{
+      const original = el.getAttribute('data-cell');
+      if(!original) return;
+      if(lang === 'en' && cellMap.en[original]){
+        el.textContent = cellMap.en[original];
+      } else {
+        el.textContent = original;
+      }
+    });
+  }
 
   let currentLang = localStorage.getItem('oser-lang') || 'es';
 
@@ -896,9 +1262,15 @@
       const key = el.getAttribute('data-i18n');
       if(dict[key] !== undefined) el.innerHTML = dict[key];
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+    });
     document.querySelectorAll('.lang-btn').forEach(btn=>{
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
+
+    translateCells(lang);
 
     localStorage.setItem('oser-lang', lang);
   }
@@ -933,6 +1305,176 @@
     });
   }, {rootMargin:'-40% 0px -50% 0px'});
   sections.forEach(s=>io.observe(s));
+
+  // ---------- Floating menu ----------
+  const menuFloatToggle = document.getElementById('menuFloatToggle');
+  const menuPanel = document.getElementById('menuPanel');
+  const searchToggle = document.getElementById('searchToggle');
+  const searchPanel = document.getElementById('searchPanel');
+
+  function closeMenuPanel(){
+    menuPanel.classList.remove('open');
+    menuFloatToggle.classList.remove('active');
+    menuFloatToggle.setAttribute('aria-expanded','false');
+  }
+  function closeSearchPanel(){
+    searchPanel.classList.remove('open');
+    searchToggle.classList.remove('active');
+    searchToggle.setAttribute('aria-expanded','false');
+  }
+
+  menuFloatToggle.addEventListener('click', ()=>{
+    const willOpen = !menuPanel.classList.contains('open');
+    closeSearchPanel();
+    menuPanel.classList.toggle('open', willOpen);
+    menuFloatToggle.classList.toggle('active', willOpen);
+    menuFloatToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  });
+  menuPanel.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', closeMenuPanel);
+  });
+
+  searchToggle.addEventListener('click', ()=>{
+    const willOpen = !searchPanel.classList.contains('open');
+    closeMenuPanel();
+    searchPanel.classList.toggle('open', willOpen);
+    searchToggle.classList.toggle('active', willOpen);
+    searchToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    if(willOpen){
+      const inp = document.getElementById('pageSearchInput');
+      inp.focus();
+      inp.select();
+    }
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(!menuPanel.contains(e.target) && e.target !== menuFloatToggle){ closeMenuPanel(); }
+    if(!searchPanel.contains(e.target) && e.target !== searchToggle){ closeSearchPanel(); }
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){ closeMenuPanel(); closeSearchPanel(); }
+  });
+
+  // ---------- Font size zoom ----------
+  const FONT_MIN = 0.8, FONT_MAX = 1.5, FONT_STEP = 0.1;
+  let fontScale = parseFloat(localStorage.getItem('oser-fontscale') || '1');
+  const fontResetBtn = document.getElementById('fontReset');
+
+  function applyFontScale(){
+    fontScale = Math.min(FONT_MAX, Math.max(FONT_MIN, fontScale));
+    document.querySelector('.shell').style.zoom = fontScale;
+    fontResetBtn.textContent = Math.round(fontScale * 100) + '%';
+    localStorage.setItem('oser-fontscale', fontScale.toFixed(2));
+  }
+  document.getElementById('fontIncrease').addEventListener('click', ()=>{
+    fontScale += FONT_STEP;
+    applyFontScale();
+  });
+  document.getElementById('fontDecrease').addEventListener('click', ()=>{
+    fontScale -= FONT_STEP;
+    applyFontScale();
+  });
+  fontResetBtn.addEventListener('click', ()=>{
+    fontScale = 1;
+    applyFontScale();
+  });
+  applyFontScale();
+
+  // ---------- In-page search (magnifier) ----------
+  const pageSearchInput = document.getElementById('pageSearchInput');
+  const searchCountEl = document.getElementById('searchCount');
+  const mainEl = document.querySelector('main');
+  let hits = [];
+  let currentHit = -1;
+  let searchDebounce = null;
+
+  function clearHighlights(){
+    document.querySelectorAll('mark.page-hit').forEach(m=>{
+      const t = document.createTextNode(m.textContent);
+      m.replaceWith(t);
+      if(t.parentNode) t.parentNode.normalize();
+    });
+    hits = [];
+    currentHit = -1;
+  }
+
+  function updateCount(){
+    if(hits.length === 0){
+      searchCountEl.textContent = pageSearchInput.value ? '0 / 0' : '';
+    } else {
+      searchCountEl.textContent = (currentHit + 1) + ' / ' + hits.length;
+    }
+  }
+
+  function highlightMatches(query){
+    clearHighlights();
+    const q = query.trim().toLowerCase();
+    if(!q){ updateCount(); return; }
+
+    const walker = document.createTreeWalker(mainEl, NodeFilter.SHOW_TEXT, {
+      acceptNode(node){
+        if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = node.parentElement;
+        if(!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const nodes = [];
+    let n;
+    while((n = walker.nextNode())) nodes.push(n);
+
+    nodes.forEach(node=>{
+      const text = node.nodeValue;
+      const lower = text.toLowerCase();
+      if(!lower.includes(q)) return;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0, idx;
+      while((idx = lower.indexOf(q, lastIndex)) !== -1){
+        if(idx > lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, idx)));
+        const mark = document.createElement('mark');
+        mark.className = 'page-hit';
+        mark.textContent = text.slice(idx, idx + q.length);
+        frag.appendChild(mark);
+        lastIndex = idx + q.length;
+      }
+      if(lastIndex < text.length) frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+
+    hits = Array.from(document.querySelectorAll('mark.page-hit'));
+    currentHit = hits.length ? 0 : -1;
+    updateCount();
+    if(hits.length) goToHit(0);
+  }
+
+  function goToHit(i){
+    if(hits.length === 0) return;
+    if(i < 0) i = hits.length - 1;
+    if(i >= hits.length) i = 0;
+    hits.forEach(h=>h.classList.remove('active-hit'));
+    currentHit = i;
+    const target = hits[currentHit];
+    const details = target.closest('details');
+    if(details) details.open = true;
+    target.classList.add('active-hit');
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    updateCount();
+  }
+
+  pageSearchInput.addEventListener('input', ()=>{
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(()=>highlightMatches(pageSearchInput.value), 150);
+  });
+  pageSearchInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(e.shiftKey) goToHit(currentHit - 1);
+      else goToHit(currentHit + 1);
+    }
+  });
+  document.getElementById('searchNext').addEventListener('click', ()=>goToHit(currentHit + 1));
+  document.getElementById('searchPrev').addEventListener('click', ()=>goToHit(currentHit - 1));
 
   // ---------- Init ----------
   applyLang(currentLang);
