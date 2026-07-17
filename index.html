@@ -145,54 +145,12 @@
     line-height:1.6;
   }
 
-  /* ---------- Search ---------- */
-  .search-wrap{position:relative;}
-  .search-wrap input{
-    width:100%;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(233,226,211,0.3);
-    color:#f1ecdf;
-    padding:9px 11px;
-    font-size:13px;
-    border-radius:var(--radius);
-    font-family:inherit;
-  }
-  .search-wrap input::placeholder{color:#9c8e6d;}
-  .search-results{
-    position:absolute;
-    top:calc(100% + 6px);
-    left:0;right:0;
-    background:var(--panel);
-    color:var(--ink);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    max-height:340px;
-    overflow-y:auto;
-    z-index:50;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35);
-    display:none;
-  }
-  .search-results.show{display:block;}
-  .search-results .res{
-    padding:10px 12px;
-    border-bottom:1px solid var(--line);
-    cursor:pointer;
-    font-size:13px;
-  }
-  .search-results .res:last-child{border-bottom:none;}
-  .search-results .res:hover, .search-results .res.kbd-active{background:#f0ece0;}
-  .search-results .res .tag{
-    font-size:10px;text-transform:uppercase;letter-spacing:.1em;
-    color:var(--brass-deep);display:block;margin-bottom:2px;
-  }
-  .search-results .empty{padding:14px 12px;font-size:13px;color:var(--ink-soft);}
-  mark{background:#f1d9ab;color:var(--ink);padding:0 1px;}
-
   /* ---------- Main ---------- */
   main{padding:0;}
   section{
     padding:90px 64px;
     max-width:920px;
+    margin:0 auto;
     border-bottom:1px solid var(--line);
     scroll-margin-top:20px;
   }
@@ -210,6 +168,8 @@
   /* ---------- Hero ---------- */
   .hero{
     padding:0;
+    max-width:none;
+    margin:0;
     border-bottom:1px solid var(--line);
     position:relative;
     overflow:hidden;
@@ -217,7 +177,7 @@
       radial-gradient(circle at 85% 10%, rgba(181,118,44,0.10), transparent 45%),
       var(--paper);
   }
-  .hero-inner{padding:100px 64px 84px;position:relative;}
+  .hero-inner{padding:100px 64px 84px;position:relative;max-width:920px;margin:0 auto;}
   .hero .eyebrow{margin-bottom:22px;}
   .hero h1{
     font-size:clamp(40px,6vw,68px);
@@ -502,12 +462,6 @@
       display:block;color:#d8cfba;text-decoration:none;
       padding:10px 4px;font-size:14px;border-bottom:1px solid rgba(233,226,211,0.15);
     }
-    .mobile-search{padding:0 18px 16px;background:var(--wood);}
-    .mobile-search input{
-      width:100%;background:rgba(255,255,255,0.06);
-      border:1px solid rgba(233,226,211,0.3);color:#f1ecdf;
-      padding:9px 11px;font-size:13px;border-radius:var(--radius);font-family:inherit;
-    }
     section{padding:56px 24px;}
     .hero-inner{padding:56px 24px 60px;}
     .hero-meta{grid-template-columns:1fr 1fr;}
@@ -547,11 +501,6 @@
       <button type="button" class="lang-btn" data-lang="en">EN</button>
     </div>
 
-    <div class="search-wrap">
-      <input type="text" id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
-      <div class="search-results" id="searchResults"></div>
-    </div>
-
     <nav class="toc" aria-label="Secciones del programa">
       <a href="#inicio" class="toc-link"><span class="num">00</span> <span data-i18n="nav.inicio">Inicio</span></a>
       <a href="#programa" class="toc-link"><span class="num">01</span> <span data-i18n="nav.programa">Programa</span></a>
@@ -573,10 +522,6 @@
     <a href="#director"><span class="num">03</span> · <span data-i18n="nav.director">Director</span></a>
     <a href="#integrantes"><span class="num">04</span> · <span data-i18n="nav.integrantes">Integrantes</span></a>
   </div>
-  <div class="mobile-search" id="mobileSearchWrap" style="display:none;">
-    <input type="text" id="searchInputMobile" data-i18n-placeholder="search.placeholder" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
-  </div>
-
   <!-- ================= MAIN ================= -->
   <main>
 
@@ -778,7 +723,7 @@
         </table>
       </details>
 
-      <p class="editable-note" data-i18n="integrantes.helpNote">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.</p>
+      <p class="editable-note" data-i18n="integrantes.helpNote">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. Agregá las filas directamente a la tabla.</p>
     </section>
 
     <footer>
@@ -807,7 +752,6 @@
       "nav.historia": "Historia",
       "nav.director": "Director",
       "nav.integrantes": "Integrantes",
-      "search.placeholder": "Buscar compositor, obra, músico…",
       "hero.eyebrow": "Música — Concierto de temporada",
       "hero.title": "La Sinfónica<br>en <em>La Vieja Usina</em>",
       "hero.desc": "La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.",
@@ -864,10 +808,9 @@
       "integrantes.emptyMaderas": "Completar con flautas, oboes, clarinetes y fagotes.",
       "integrantes.emptyMetales": "Completar con trompas, trompetas, trombones y tuba.",
       "integrantes.emptyPercusion": "Completar con timbales y percusión.",
-      "integrantes.helpNote": "Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.",
+      "integrantes.helpNote": "Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. Agregá las filas directamente a la tabla.",
       "footer.left": "Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos",
       "footer.right": "Centro de Ojos Dr. Lódolo · La Vieja Usina",
-      "search.noResults": "Sin resultados para"
     },
     en: {
       "brand.mobileName": "OSER · Program",
@@ -880,7 +823,6 @@
       "nav.historia": "History",
       "nav.director": "Conductor",
       "nav.integrantes": "Members",
-      "search.placeholder": "Search composer, work, musician…",
       "hero.eyebrow": "Music — Season Concert",
       "hero.title": "The Symphony<br>at <em>La Vieja Usina</em>",
       "hero.desc": "The Entre Ríos Symphony Orchestra performs Debussy and Berlioz under the baton of Luis Gorelik, in a sold-out gathering at the cultural heart of Paraná.",
@@ -937,10 +879,9 @@
       "integrantes.emptyMaderas": "Fill in with flutes, oboes, clarinets and bassoons.",
       "integrantes.emptyMetales": "Fill in with horns, trumpets, trombones and tuba.",
       "integrantes.emptyPercusion": "Fill in with timpani and percussion.",
-      "integrantes.helpNote": "Editable: each empty row can be replaced with &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Instrument&lt;/td&gt;&lt;td&gt;Chair&lt;/td&gt;&lt;/tr&gt; inside the matching &lt;tbody&gt;. The search box automatically indexes any row you add.",
+      "integrantes.helpNote": "Editable: each empty row can be replaced with &lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Instrument&lt;/td&gt;&lt;td&gt;Chair&lt;/td&gt;&lt;/tr&gt; inside the matching &lt;tbody&gt;. Add rows directly to the table.",
       "footer.left": "Entre Ríos Symphony Orchestra — Secretariat of Culture of Entre Ríos",
       "footer.right": "Dr. Lódolo Eye Center · La Vieja Usina",
-      "search.noResults": "No results for"
     }
   };
 
@@ -955,20 +896,11 @@
       const key = el.getAttribute('data-i18n');
       if(dict[key] !== undefined) el.innerHTML = dict[key];
     });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-      const key = el.getAttribute('data-i18n-placeholder');
-      if(dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
-    });
-
     document.querySelectorAll('.lang-btn').forEach(btn=>{
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
     localStorage.setItem('oser-lang', lang);
-
-    // Refresh search index + clear any open results with stale-language text
-    index = buildIndex();
-    document.getElementById('searchResults').classList.remove('show');
   }
 
   document.querySelectorAll('.lang-btn').forEach(btn=>{
@@ -978,16 +910,13 @@
   // ---------- Mobile menu toggle ----------
   const menuToggle = document.getElementById('menuToggle');
   const mobileMenu = document.getElementById('mobileMenu');
-  const mobileSearchWrap = document.getElementById('mobileSearchWrap');
   menuToggle.addEventListener('click', function(){
     const open = mobileMenu.classList.toggle('open');
-    mobileSearchWrap.style.display = open ? 'block' : 'none';
     menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   document.querySelectorAll('.mobile-menu a').forEach(a=>{
     a.addEventListener('click', ()=>{
       mobileMenu.classList.remove('open');
-      mobileSearchWrap.style.display = 'none';
     });
   });
 
@@ -1004,123 +933,6 @@
     });
   }, {rootMargin:'-40% 0px -50% 0px'});
   sections.forEach(s=>io.observe(s));
-
-  // ---------- Search index (language-aware) ----------
-  function buildIndex(){
-    const items = [];
-
-    document.querySelectorAll('.piece').forEach(piece=>{
-      const title = currentLang === 'en' ? piece.dataset.titleEn : piece.dataset.titleEs;
-      const composer = piece.dataset.composer;
-      items.push({
-        type: currentLang === 'en' ? 'Work' : 'Obra',
-        title: title,
-        sub: composer,
-        el: piece,
-        text: (title + ' ' + composer).toLowerCase()
-      });
-    });
-
-    document.querySelectorAll('main section[data-searchable]').forEach(sec=>{
-      const title = currentLang === 'en' ? sec.dataset.titleEn : sec.dataset.titleEs;
-      items.push({
-        type: currentLang === 'en' ? 'Section' : 'Sección',
-        title: title,
-        sub: '',
-        el: sec,
-        text: (title + ' ' + sec.innerText).toLowerCase()
-      });
-    });
-
-    document.querySelectorAll('table.roster tbody tr').forEach(row=>{
-      if(row.classList.contains('roster-empty')) return;
-      const cells = row.querySelectorAll('td');
-      if(cells.length < 2) return;
-      const name = cells[0].innerText.trim();
-      const instrument = cells[1].innerText.trim();
-      items.push({
-        type: currentLang === 'en' ? 'Musician' : 'Músico',
-        title: name,
-        sub: instrument,
-        el: row.closest('details.section-strip') || row,
-        text: (name + ' ' + instrument).toLowerCase()
-      });
-    });
-
-    return items;
-  }
-
-  let index = buildIndex();
-
-  function runSearch(query, resultsEl){
-    const q = query.trim().toLowerCase();
-    resultsEl.innerHTML = '';
-    if(!q){
-      resultsEl.classList.remove('show');
-      return;
-    }
-    index = buildIndex();
-    const matches = index.filter(item => item.text.includes(q)).slice(0, 12);
-
-    if(matches.length === 0){
-      resultsEl.innerHTML = '<div class="empty">'+ i18n[currentLang]['search.noResults'] +' "'+ escapeHtml(query) +'"</div>';
-      resultsEl.classList.add('show');
-      return;
-    }
-
-    matches.forEach(m=>{
-      const div = document.createElement('div');
-      div.className = 'res';
-      div.innerHTML = '<span class="tag">'+m.type+'</span>' + highlight(m.title, q) + (m.sub ? ' <span style="color:var(--ink-soft)">— '+highlight(m.sub,q)+'</span>' : '');
-      div.addEventListener('click', ()=>{
-        goTo(m.el);
-        resultsEl.classList.remove('show');
-      });
-      resultsEl.appendChild(div);
-    });
-    resultsEl.classList.add('show');
-  }
-
-  function highlight(text, q){
-    const safe = escapeHtml(text);
-    if(!q) return safe;
-    const idx = safe.toLowerCase().indexOf(q.toLowerCase());
-    if(idx === -1) return safe;
-    return safe.slice(0,idx) + '<mark>' + safe.slice(idx, idx+q.length) + '</mark>' + safe.slice(idx+q.length);
-  }
-
-  function escapeHtml(str){
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-  }
-
-  function goTo(el){
-    if(el.tagName === 'DETAILS'){ el.open = true; }
-    const parentDetails = el.closest('details');
-    if(parentDetails) parentDetails.open = true;
-    el.scrollIntoView({behavior:'smooth', block:'center'});
-    el.classList.add('flash');
-    setTimeout(()=>el.classList.remove('flash'), 1400);
-  }
-
-  const searchInput = document.getElementById('searchInput');
-  const searchResults = document.getElementById('searchResults');
-  searchInput.addEventListener('input', ()=>runSearch(searchInput.value, searchResults));
-  searchInput.addEventListener('blur', ()=> setTimeout(()=>searchResults.classList.remove('show'), 150));
-  searchInput.addEventListener('focus', ()=>{ if(searchInput.value) runSearch(searchInput.value, searchResults); });
-
-  const searchInputMobile = document.getElementById('searchInputMobile');
-  const mobileResults = document.createElement('div');
-  mobileResults.className = 'search-results';
-  mobileResults.style.position = 'static';
-  mobileResults.style.marginTop = '8px';
-  mobileResults.style.display = 'none';
-  mobileSearchWrap.appendChild(mobileResults);
-  searchInputMobile.addEventListener('input', ()=>{
-    runSearch(searchInputMobile.value, mobileResults);
-    mobileResults.style.display = mobileResults.classList.contains('show') ? 'block' : 'none';
-  });
 
   // ---------- Init ----------
   applyLang(currentLang);
