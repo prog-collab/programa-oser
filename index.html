@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSER — La Sinfónica en La Vieja Usina</title>
+<style>
+  :root{
+    --paper:#f6f4ef;
+    --ink:#1c1b19;
+    --ink-soft:#5a564e;
+    --line:#d8d3c7;
+    --brass:#b5762c;
+    --brass-deep:#8a5a1f;
+    --panel:#ffffff;
+    --wood:#3c2f26;
+    --focus:#1c56c8;
+    --radius:2px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.5;
+  }
+  ::selection{background:var(--brass);color:#fff;}
+
+  h1,h2,h3,.eyebrow{font-family:"Iowan Old Style",Georgia,serif;}
+  .mono{font-family:"Courier New",monospace;}
+
+  a{color:inherit;}
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* ---------- Layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    background:var(--wood);
+    color:#e9e2d3;
+    padding:28px 22px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+  .brand{
+    border-bottom:1px solid rgba(233,226,211,0.25);
+    padding-bottom:16px;
+  }
+  .brand .mark{
+    width:34px;height:34px;
+    border:1.5px solid #e9e2d3;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;letter-spacing:1px;
+    margin-bottom:10px;
+  }
+  .brand .name{
+    font-size:15px;
+    line-height:1.25;
+    letter-spacing:.02em;
+  }
+  .brand .sub{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:#c2b393;
+    margin-top:6px;
+  }
+
+  nav.toc{display:flex;flex-direction:column;gap:2px;}
+  nav.toc a{
+    text-decoration:none;
+    color:#d8cfba;
+    font-size:13.5px;
+    padding:9px 10px;
+    border-radius:var(--radius);
+    letter-spacing:.02em;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    transition:background .15s ease, color .15s ease;
+  }
+  nav.toc a .num{
+    font-family:"Courier New",monospace;
+    font-size:10.5px;
+    color:#9c8e6d;
+  }
+  nav.toc a:hover{background:rgba(233,226,211,0.09);color:#fff;}
+  nav.toc a.active{
+    background:rgba(181,118,44,0.22);
+    color:#fff;
+    box-shadow:inset 2px 0 0 var(--brass);
+  }
+
+  .sidebar-foot{
+    margin-top:auto;
+    font-size:11px;
+    color:#8d8266;
+    border-top:1px solid rgba(233,226,211,0.2);
+    padding-top:14px;
+    line-height:1.6;
+  }
+
+  /* ---------- Search ---------- */
+  .search-wrap{position:relative;}
+  .search-wrap input{
+    width:100%;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(233,226,211,0.3);
+    color:#f1ecdf;
+    padding:9px 11px;
+    font-size:13px;
+    border-radius:var(--radius);
+    font-family:inherit;
+  }
+  .search-wrap input::placeholder{color:#9c8e6d;}
+  .search-results{
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;right:0;
+    background:var(--panel);
+    color:var(--ink);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    max-height:340px;
+    overflow-y:auto;
+    z-index:50;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    display:none;
+  }
+  .search-results.show{display:block;}
+  .search-results .res{
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    font-size:13px;
+  }
+  .search-results .res:last-child{border-bottom:none;}
+  .search-results .res:hover, .search-results .res.kbd-active{background:#f0ece0;}
+  .search-results .res .tag{
+    font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--brass-deep);display:block;margin-bottom:2px;
+  }
+  .search-results .empty{padding:14px 12px;font-size:13px;color:var(--ink-soft);}
+  mark{background:#f1d9ab;color:var(--ink);padding:0 1px;}
+
+  /* ---------- Main ---------- */
+  main{padding:0;}
+  section{
+    padding:90px 64px;
+    max-width:920px;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:20px;
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:12px;
+    color:var(--brass-deep);
+    font-family:"Courier New",monospace;
+    margin:0 0 14px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:0;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 85% 10%, rgba(181,118,44,0.10), transparent 45%),
+      var(--paper);
+  }
+  .hero-inner{padding:100px 64px 84px;position:relative;}
+  .hero .eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(40px,6vw,68px);
+    line-height:1.04;
+    margin:0 0 20px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--brass-deep);
+  }
+  .hero .desc{
+    max-width:560px;
+    font-size:17px;
+    color:var(--ink-soft);
+    margin:0 0 40px;
+  }
+  .hero-meta{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:0;
+    max-width:760px;
+    border-top:1px solid var(--line);
+  }
+  .hero-meta .cell{
+    padding:18px 22px 18px 0;
+    border-right:1px solid var(--line);
+  }
+  .hero-meta .cell:last-child{border-right:none;}
+  .hero-meta .label{
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--ink-soft);margin-bottom:6px;
+  }
+  .hero-meta .value{font-size:16px;font-weight:600;}
+  .hero-meta .value.small{font-size:14px;font-weight:400;line-height:1.35;}
+
+  .baton{
+    position:absolute;
+    right:64px;top:100px;
+    width:150px;height:150px;
+    opacity:.9;
+  }
+
+  .badge-free{
+    display:inline-block;
+    margin-top:30px;
+    border:1px solid var(--brass-deep);
+    color:var(--brass-deep);
+    font-family:"Courier New",monospace;
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    padding:7px 12px;
+    border-radius:100px;
+  }
+
+  /* ---------- Section heads ---------- */
+  section h2{
+    font-size:30px;
+    margin:0 0 8px;
+    font-weight:600;
+  }
+  .section-intro{color:var(--ink-soft);max-width:640px;margin:0 0 36px;font-size:15.5px;}
+
+  /* ---------- Programa (obras) ---------- */
+  .piece{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .piece summary{
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:22px 24px;
+    position:relative;
+  }
+  .piece summary::-webkit-details-marker{display:none;}
+  .piece .pnum{
+    font-family:"Courier New",monospace;
+    font-size:13px;
+    color:var(--brass-deep);
+    width:26px;
+  }
+  .piece .ptitle{flex:1;}
+  .piece .composer{
+    font-size:11px;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--ink-soft);margin-bottom:3px;
+  }
+  .piece .work{font-size:19px;font-weight:600;}
+  .piece .chev{
+    font-size:20px;color:var(--brass-deep);
+    transition:transform .2s ease;
+    flex-shrink:0;
+  }
+  .piece[open] .chev{transform:rotate(45deg);}
+  .piece .body{
+    padding:0 24px 26px 68px;
+    color:var(--ink-soft);
+    font-size:15px;
+    border-top:1px solid var(--line);
+    margin-top:0;
+    padding-top:20px;
+  }
+  .piece .body p{margin:0 0 12px;}
+  .piece .facts{
+    display:flex;flex-wrap:wrap;gap:22px;
+    margin-top:16px;
+    font-size:13px;
+  }
+  .piece .facts div{color:var(--ink);}
+  .piece .facts span{display:block;color:var(--ink-soft);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
+
+  /* ---------- Historia ---------- */
+  .historia-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  .historia-grid p{color:var(--ink-soft);font-size:15.5px;margin:0 0 16px;}
+  .historia-grid .lede{
+    font-size:19px;
+    color:var(--ink);
+    font-style:italic;
+    border-left:3px solid var(--brass);
+    padding-left:18px;
+    margin:0 0 20px;
+  }
+  .editable-note{
+    display:inline-block;
+    margin-top:10px;
+    font-family:"Courier New",monospace;
+    font-size:11px;
+    color:var(--brass-deep);
+    border:1px dashed var(--brass);
+    padding:6px 10px;
+    border-radius:var(--radius);
+    background:rgba(181,118,44,0.06);
+  }
+
+  /* ---------- Director ---------- */
+  .director-card{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .director-photo{
+    width:200px;height:200px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 30%, #6b5a44, #241d16 75%);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:#c2b393;font-size:11px;text-align:center;
+    font-family:"Courier New",monospace;
+    letter-spacing:.05em;
+  }
+  .director-name{font-size:26px;font-weight:600;margin:0 0 4px;}
+  .director-role{color:var(--brass-deep);font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin:0 0 20px;}
+  .director-bio p{color:var(--ink-soft);font-size:15px;margin:0 0 14px;}
+  .director-highlights{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;
+  }
+  .director-highlights span{
+    font-size:12px;
+    border:1px solid var(--line);
+    padding:5px 11px;
+    border-radius:100px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Integrantes ---------- */
+  .section-strip{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:16px;
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .section-strip summary{
+    list-style:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;
+  }
+  .section-strip summary::-webkit-details-marker{display:none;}
+  .section-strip .st-name{font-size:16px;font-weight:600;}
+  .section-strip .st-count{
+    font-family:"Courier New",monospace;font-size:12px;color:var(--ink-soft);
+  }
+  .section-strip .chev{color:var(--brass-deep);transition:transform .2s ease;}
+  .section-strip[open] .chev{transform:rotate(45deg);}
+  table.roster{
+    width:100%;
+    border-collapse:collapse;
+    border-top:1px solid var(--line);
+  }
+  table.roster th{
+    text-align:left;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    padding:12px 22px 8px;
+    font-weight:600;
+  }
+  table.roster td{
+    padding:10px 22px;
+    font-size:14.5px;
+    border-top:1px solid var(--line);
+  }
+  table.roster tr:hover td{background:#f6f1e4;}
+  .roster-empty td{color:var(--ink-soft);font-style:italic;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:50px 64px 70px;
+    color:var(--ink-soft);
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+
+  /* highlight-on-scroll target */
+  .flash{animation:flashbg 1.4s ease;}
+  @keyframes flashbg{
+    0%{background:#f1d9ab;}
+    100%{background:transparent;}
+  }
+
+  /* ---------- Mobile nav toggle ---------- */
+  .mobile-bar{display:none;}
+
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{
+      position:sticky;top:0;height:auto;
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 18px;
+      z-index:100;
+    }
+    .sidebar .brand,.sidebar nav.toc,.sidebar-foot{display:none;}
+    .mobile-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      width:100%;
+    }
+    .mobile-bar .name{color:#e9e2d3;font-size:14px;}
+    .mobile-bar button{
+      background:none;border:1px solid #e9e2d3;color:#e9e2d3;
+      padding:7px 12px;font-size:12px;border-radius:var(--radius);
+      font-family:inherit;cursor:pointer;
+    }
+    .mobile-menu{
+      display:none;
+      background:var(--wood);
+      padding:12px 18px 20px;
+    }
+    .mobile-menu.open{display:block;}
+    .mobile-menu a{
+      display:block;color:#d8cfba;text-decoration:none;
+      padding:10px 4px;font-size:14px;border-bottom:1px solid rgba(233,226,211,0.15);
+    }
+    .mobile-search{padding:0 18px 16px;background:var(--wood);}
+    .mobile-search input{
+      width:100%;background:rgba(255,255,255,0.06);
+      border:1px solid rgba(233,226,211,0.3);color:#f1ecdf;
+      padding:9px 11px;font-size:13px;border-radius:var(--radius);font-family:inherit;
+    }
+    section{padding:56px 24px;}
+    .hero-inner{padding:56px 24px 60px;}
+    .hero-meta{grid-template-columns:1fr 1fr;}
+    .director-card{grid-template-columns:1fr;}
+    .director-photo{width:140px;height:140px;}
+    .historia-grid{grid-template-columns:1fr;}
+    .baton{display:none;}
+    footer{padding:36px 24px 50px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="mobile-bar">
+      <span class="name">OSER · Programa</span>
+      <button id="menuToggle" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
+    </div>
+
+    <div class="brand">
+      <div class="mark">ER</div>
+      <div class="name">Orquesta Sinfónica<br>de Entre Ríos</div>
+      <div class="sub">Programa de sala</div>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <nav class="toc" aria-label="Secciones del programa">
+      <a href="#inicio" class="toc-link"><span class="num">00</span> Inicio</a>
+      <a href="#programa" class="toc-link"><span class="num">01</span> Programa</a>
+      <a href="#historia" class="toc-link"><span class="num">02</span> Historia</a>
+      <a href="#director" class="toc-link"><span class="num">03</span> Director</a>
+      <a href="#integrantes" class="toc-link"><span class="num">04</span> Integrantes</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      Sábado 25 de julio, 20h<br>
+      Centro Cultural La Vieja Usina · Paraná
+    </div>
+  </aside>
+
+  <!-- Mobile menu + search (shown under sticky bar on small screens) -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#inicio">00 · Inicio</a>
+    <a href="#programa">01 · Programa</a>
+    <a href="#historia">02 · Historia</a>
+    <a href="#director">03 · Director</a>
+    <a href="#integrantes">04 · Integrantes</a>
+  </div>
+  <div class="mobile-search" id="mobileSearchWrap" style="display:none;">
+    <input type="text" id="searchInputMobile" placeholder="Buscar compositor, obra, músico…" autocomplete="off" aria-label="Buscar en el programa">
+  </div>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+
+    <!-- ---- HERO ---- -->
+    <section class="hero" id="inicio">
+      <div class="hero-inner">
+        <p class="eyebrow">Música — Concierto de temporada</p>
+        <h1>La Sinfónica<br>en <em>La Vieja Usina</em></h1>
+        <p class="desc">La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.</p>
+
+        <svg class="baton" viewBox="0 0 100 100" aria-hidden="true">
+          <line x1="20" y1="80" x2="78" y2="20" stroke="#b5762c" stroke-width="2" opacity="0.6"/>
+          <circle cx="78" cy="20" r="5" fill="#b5762c" opacity="0.7"/>
+          <circle cx="20" cy="80" r="2.5" fill="#8a5a1f" opacity="0.6"/>
+        </svg>
+
+        <div class="hero-meta">
+          <div class="cell">
+            <div class="label">Fecha</div>
+            <div class="value">Sáb 25 de julio</div>
+          </div>
+          <div class="cell">
+            <div class="label">Horario</div>
+            <div class="value">20:00 h</div>
+          </div>
+          <div class="cell">
+            <div class="label">Lugar</div>
+            <div class="value small">Centro Cultural La Vieja Usina<br>Gregoria Matorras de San Martín 861, Paraná</div>
+          </div>
+          <div class="cell">
+            <div class="label">Director</div>
+            <div class="value">Luis Gorelik</div>
+          </div>
+        </div>
+
+        <span class="badge-free">Entrada libre y gratuita — por orden de llegada</span>
+      </div>
+    </section>
+
+    <!-- ---- PROGRAMA ---- -->
+    <section id="programa">
+      <p class="eyebrow">01 — Repertorio</p>
+      <h2>Obras del programa</h2>
+      <p class="section-intro">Dos obras que dialogan desde extremos distintos del romanticismo francés: la languidez impresionista de Debussy y el desborde autobiográfico de Berlioz.</p>
+
+      <details class="piece" open data-searchable data-title="Preludio a la siesta de un fauno" data-composer="Claude Debussy">
+        <summary>
+          <span class="pnum">01</span>
+          <span class="ptitle">
+            <span class="composer">Claude Debussy</span>
+            <span class="work">Preludio a la siesta de un fauno</span>
+          </span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <p>Poema sinfónico compuesto en 1894, inspirado en el poema de Stéphane Mallarmé. Considerada una obra bisagra hacia la música del siglo XX por su tratamiento libre de la armonía y el color orquestal, antes que su estructura formal.</p>
+          <div class="facts">
+            <div><span>Compositor</span>Claude Debussy (1862–1918)</div>
+            <div><span>Año de composición</span>1894</div>
+            <div><span>Duración aprox.</span>10 min</div>
+          </div>
+          <p class="editable-note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
+        </div>
+      </details>
+
+      <details class="piece" data-searchable data-title="Sinfonía Fantástica" data-composer="Héctor Berlioz">
+        <summary>
+          <span class="pnum">02</span>
+          <span class="ptitle">
+            <span class="composer">Héctor Berlioz</span>
+            <span class="work">Sinfonía Fantástica, Op. 14</span>
+          </span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <p>Estrenada en 1830, es una de las obras fundacionales del romanticismo orquestal. Narra en cinco movimientos el delirio pasional de un artista obsesionado, unificados por una "idea fija" melódica que reaparece transformada en cada parte.</p>
+          <div class="facts">
+            <div><span>Compositor</span>Héctor Berlioz (1803–1869)</div>
+            <div><span>Año de composición</span>1830</div>
+            <div><span>Movimientos</span>5</div>
+            <div><span>Duración aprox.</span>50 min</div>
+          </div>
+          <p class="editable-note">Editable: agregar aquí notas al programa específicas de esta función si el equipo de prensa las provee.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ---- HISTORIA ---- -->
+    <section id="historia" data-searchable data-title="Historia de la OSER" data-composer="">
+      <p class="eyebrow">02 — Institucional</p>
+      <h2>Historia</h2>
+      <p class="section-intro">Reseña institucional de la Orquesta Sinfónica de Entre Ríos.</p>
+
+      <div class="historia-grid">
+        <div>
+          <p class="lede">Una orquesta estable al servicio de la vida cultural de Entre Ríos, con más de cuatro décadas de trayectoria ininterrumpida.</p>
+          <p>La Orquesta Sinfónica de Entre Ríos (OSER) es el organismo musical estable de la provincia, dependiente de la Secretaría de Cultura de Entre Ríos, dedicado a la difusión del repertorio sinfónico en Paraná y en localidades del interior provincial.</p>
+        </div>
+        <div>
+          <p>Desde 2010 se encuentra bajo la dirección artística de Luis Gorelik, período en el que ha ampliado su programación, sumado alianzas con instituciones culturales locales —como el Centro Cultural La Vieja Usina— y sostenido una agenda de conciertos de acceso libre y gratuito para la comunidad.</p>
+          <span class="editable-note">Este texto es un borrador de referencia. Reemplazar por la reseña histórica oficial de la OSER cuando esté disponible.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- DIRECTOR ---- -->
+    <section id="director" data-searchable data-title="Luis Gorelik" data-composer="Director">
+      <p class="eyebrow">03 — Dirección artística</p>
+      <h2>Director</h2>
+      <p class="section-intro"></p>
+
+      <div class="director-card">
+        <div class="director-photo">Foto<br>de<br>Luis Gorelik</div>
+        <div>
+          <h3 class="director-name">Luis Gorelik</h3>
+          <p class="director-role">Director artístico — OSER</p>
+          <div class="director-bio">
+            <p>Director Artístico de la Orquesta Sinfónica de Entre Ríos desde 2010 y de la Orquesta Nacional Juan de Dios Filiberto entre 2016 y 2018. Nació en La Plata, Argentina, en 1963 y se formó con Pedro I. Calderón en Buenos Aires y con Mendi Rodán en Israel, donde egresó con honores de la Academia Superior de Música Rubin, en Jerusalén.</p>
+            <p>Entre sus distinciones se cuentan el Premio Konex Mejor Director de Orquesta de la Década (2009), el Premio de Arte y Cultura, Medalla Claudio Arrau (Chile, 2005), el Premio a la Música entregado por el Presidente de la República de Chile, Ricardo Lagos (2004), y el Premio Gardel al Mejor CD de Música Clásica junto a la Orquesta Sinfónica de Entre Ríos (2014).</p>
+            <p>Fue Director Titular de la Orquesta Filarmónica de Mendoza (1985–1988), de la Orquesta de Cámara de Ashdod en Israel (1994–1999), de la Orquesta Sinfónica de la Universidad de Concepción (2000–2007) y de la Orquesta Sinfónica de Salta (2007–2010), antes de asumir en la OSER, cargo que sostiene hasta la fecha.</p>
+          </div>
+          <div class="director-highlights">
+            <span>Premio Konex 2009</span>
+            <span>Medalla Claudio Arrau · Chile 2005</span>
+            <span>Premio Gardel 2014</span>
+            <span>Formado en Jerusalén — Academia Rubin</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- INTEGRANTES ---- -->
+    <section id="integrantes">
+      <p class="eyebrow">04 — Nómina</p>
+      <h2>Integrantes</h2>
+      <p class="section-intro">El programa impreso no incluye la nómina de músicos. Se dejan las secciones instrumentales listas para completar con los nombres reales.</p>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name">Cuerdas</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count">0 músicos</span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr class="roster-empty"><td colspan="3">Completar con la nómina de violines, violas, violonchelos y contrabajos.</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name">Maderas</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count">0 músicos</span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr class="roster-empty"><td colspan="3">Completar con flautas, oboes, clarinetes y fagotes.</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name">Metales</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count">0 músicos</span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr class="roster-empty"><td colspan="3">Completar con trompas, trompetas, trombones y tuba.</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="section-strip">
+        <summary>
+          <span class="st-name">Percusión</span>
+          <span style="display:flex;align-items:center;gap:14px;">
+            <span class="st-count">0 músicos</span>
+            <span class="chev">+</span>
+          </span>
+        </summary>
+        <table class="roster">
+          <thead><tr><th>Nombre</th><th>Instrumento</th><th>Atril / Rol</th></tr></thead>
+          <tbody>
+            <tr class="roster-empty"><td colspan="3">Completar con timbales y percusión.</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <p class="editable-note">Editable: cada fila vacía puede reemplazarse por &lt;tr&gt;&lt;td&gt;Nombre&lt;/td&gt;&lt;td&gt;Instrumento&lt;/td&gt;&lt;td&gt;Atril&lt;/td&gt;&lt;/tr&gt; dentro del &lt;tbody&gt; correspondiente. El buscador ya indexa cualquier fila que agregues.</p>
+    </section>
+
+    <footer>
+      <div>Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos</div>
+      <div>Centro de Ojos Dr. Lódolo · La Vieja Usina</div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  // ---------- Mobile menu toggle ----------
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileSearchWrap = document.getElementById('mobileSearchWrap');
+  menuToggle.addEventListener('click', function(){
+    const open = mobileMenu.classList.toggle('open');
+    mobileSearchWrap.style.display = open ? 'block' : 'none';
+    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('.mobile-menu a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      mobileMenu.classList.remove('open');
+      mobileSearchWrap.style.display = 'none';
+    });
+  });
+
+  // ---------- Active nav link on scroll ----------
+  const sections = document.querySelectorAll('main section[id]');
+  const links = document.querySelectorAll('.toc-link');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const match = document.querySelector('.toc-link[href="#'+entry.target.id+'"]');
+        if(match) match.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-40% 0px -50% 0px'});
+  sections.forEach(s=>io.observe(s));
+
+  // ---------- Search index ----------
+  function buildIndex(){
+    const items = [];
+
+    // Obras
+    document.querySelectorAll('.piece').forEach(piece=>{
+      items.push({
+        type: 'Obra',
+        title: piece.dataset.title,
+        sub: piece.dataset.composer,
+        el: piece,
+        text: (piece.dataset.title + ' ' + piece.dataset.composer).toLowerCase()
+      });
+    });
+
+    // Secciones (historia / director)
+    document.querySelectorAll('main section[data-searchable]').forEach(sec=>{
+      items.push({
+        type: 'Sección',
+        title: sec.dataset.title,
+        sub: '',
+        el: sec,
+        text: (sec.dataset.title + ' ' + sec.innerText).toLowerCase()
+      });
+    });
+
+    // Integrantes: filas de tablas
+    document.querySelectorAll('table.roster tbody tr').forEach(row=>{
+      if(row.classList.contains('roster-empty')) return;
+      const cells = row.querySelectorAll('td');
+      if(cells.length < 2) return;
+      const name = cells[0].innerText.trim();
+      const instrument = cells[1].innerText.trim();
+      items.push({
+        type: 'Músico',
+        title: name,
+        sub: instrument,
+        el: row.closest('details.section-strip') || row,
+        text: (name + ' ' + instrument).toLowerCase()
+      });
+    });
+
+    return items;
+  }
+
+  let index = buildIndex();
+
+  function runSearch(query, resultsEl){
+    const q = query.trim().toLowerCase();
+    resultsEl.innerHTML = '';
+    if(!q){
+      resultsEl.classList.remove('show');
+      return;
+    }
+    index = buildIndex(); // refresh in case rows were added
+    const matches = index.filter(item => item.text.includes(q)).slice(0, 12);
+
+    if(matches.length === 0){
+      resultsEl.innerHTML = '<div class="empty">Sin resultados para "'+ escapeHtml(query) +'"</div>';
+      resultsEl.classList.add('show');
+      return;
+    }
+
+    matches.forEach(m=>{
+      const div = document.createElement('div');
+      div.className = 'res';
+      div.innerHTML = '<span class="tag">'+m.type+'</span>' + highlight(m.title, q) + (m.sub ? ' <span style="color:var(--ink-soft)">— '+highlight(m.sub,q)+'</span>' : '');
+      div.addEventListener('click', ()=>{
+        goTo(m.el);
+        resultsEl.classList.remove('show');
+      });
+      resultsEl.appendChild(div);
+    });
+    resultsEl.classList.add('show');
+  }
+
+  function highlight(text, q){
+    const safe = escapeHtml(text);
+    if(!q) return safe;
+    const idx = safe.toLowerCase().indexOf(q.toLowerCase());
+    if(idx === -1) return safe;
+    return safe.slice(0,idx) + '<mark>' + safe.slice(idx, idx+q.length) + '</mark>' + safe.slice(idx+q.length);
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function goTo(el){
+    if(el.tagName === 'DETAILS'){ el.open = true; }
+    const parentDetails = el.closest('details');
+    if(parentDetails) parentDetails.open = true;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('flash');
+    setTimeout(()=>el.classList.remove('flash'), 1400);
+  }
+
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  searchInput.addEventListener('input', ()=>runSearch(searchInput.value, searchResults));
+  searchInput.addEventListener('blur', ()=> setTimeout(()=>searchResults.classList.remove('show'), 150));
+  searchInput.addEventListener('focus', ()=>{ if(searchInput.value) runSearch(searchInput.value, searchResults); });
+
+  const searchInputMobile = document.getElementById('searchInputMobile');
+  // Reuse same results panel logic but render inline under mobile input (simple: same behavior, own dropdown)
+  const mobileResults = document.createElement('div');
+  mobileResults.className = 'search-results';
+  mobileResults.style.position = 'static';
+  mobileResults.style.marginTop = '8px';
+  mobileResults.style.display = 'none';
+  mobileSearchWrap.appendChild(mobileResults);
+  searchInputMobile.addEventListener('input', ()=>{
+    runSearch(searchInputMobile.value, mobileResults);
+    mobileResults.style.display = mobileResults.classList.contains('show') ? 'block' : 'none';
+  });
+
+  // ---------- Smooth-scroll offset correction not needed (scroll-margin-top handles it) ----------
+})();
+</script>
+
+</body>
+</html>
