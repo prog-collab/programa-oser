@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OSER — La Sinfónica en La Vieja Usina</title>
+
+<!-- PWA: instalable en escritorio y mobile -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3c2f26">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OSER">
+
 <style>
   :root{
     --paper:#f6f4ef;
@@ -631,6 +641,67 @@
     .float-toolbar{right:14px;top:64px;}
     .search-panel{width:calc(100vw - 90px);max-width:280px;}
   }
+
+  /* ---------- Install banner ---------- */
+  .install-banner{
+    position:fixed;
+    left:50%;
+    bottom:26px;
+    transform:translate(-50%, 140%);
+    z-index:400;
+    background:var(--wood);
+    color:#f1ecdf;
+    border:1px solid rgba(233,226,211,0.25);
+    border-radius:10px;
+    box-shadow:0 16px 40px rgba(0,0,0,0.35);
+    padding:18px 20px;
+    width:min(420px, calc(100vw - 32px));
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    transition:transform .35s ease;
+  }
+  .install-banner.show{transform:translate(-50%, 0);}
+  .install-banner .ib-icon{
+    width:40px;height:40px;
+    border-radius:50%;
+    border:1px solid rgba(233,226,211,0.4);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.0625rem;
+    flex-shrink:0;
+    color:#e9e2d3;
+  }
+  .install-banner .ib-body{flex:1;}
+  .install-banner .ib-title{font-weight:600;font-size:0.9375rem;margin:0 0 4px;}
+  .install-banner .ib-text{font-size:0.8125rem;color:#c9c0ab;margin:0 0 12px;line-height:1.4;}
+  .install-banner .ib-actions{display:flex;gap:10px;}
+  .install-banner button{
+    font-family:inherit;
+    border-radius:100px;
+    cursor:pointer;
+    font-size:0.8125rem;
+    padding:8px 16px;
+  }
+  .install-banner .ib-install{
+    background:var(--brass);
+    color:#fff;
+    border:none;
+  }
+  .install-banner .ib-install:hover{background:var(--brass-deep);}
+  .install-banner .ib-dismiss{
+    background:none;
+    border:1px solid rgba(233,226,211,0.35);
+    color:#e9e2d3;
+  }
+  .install-banner .ib-dismiss:hover{background:rgba(233,226,211,0.1);}
+  .install-banner .ib-close{
+    background:none;border:none;color:#9c8e6d;
+    font-size:1.0625rem;cursor:pointer;line-height:1;
+    padding:0 0 0 4px;
+  }
+  @media (max-width: 880px){
+    .install-banner{bottom:16px;padding:16px;}
+  }
 </style>
 </head>
 <body>
@@ -1090,6 +1161,20 @@
   <button type="button" class="float-btn" id="menuFloatToggle" title="Menú" aria-label="Abrir menú de secciones" aria-expanded="false">☰</button>
 </div>
 
+<!-- ================= INSTALL BANNER ================= -->
+<div class="install-banner" id="installBanner" role="dialog" aria-live="polite">
+  <div class="ib-icon">ER</div>
+  <div class="ib-body">
+    <p class="ib-title" data-i18n="install.title">Instalá el programa en tu celular</p>
+    <p class="ib-text" data-i18n="install.text">Accedé más rápido, incluso sin conexión, con el ícono directo en tu pantalla de inicio.</p>
+    <div class="ib-actions">
+      <button type="button" class="ib-install" id="installAccept" data-i18n="install.accept">Instalar</button>
+      <button type="button" class="ib-dismiss" id="installDismiss" data-i18n="install.dismiss">Ahora no</button>
+    </div>
+  </div>
+  <button type="button" class="ib-close" id="installClose" aria-label="Cerrar">×</button>
+</div>
+
 <script>
 (function(){
 
@@ -1170,6 +1255,11 @@
       "integrantes.contractedNote": "* Personal contratado.",
       "footer.left": "Orquesta Sinfónica de Entre Ríos — Secretaría de Cultura de Entre Ríos",
       "footer.right": "Centro de Ojos Dr. Lódolo · La Vieja Usina · Foto de tapa: Alejandro Astorga",
+      "install.title": "Instalá el programa en tu celular",
+      "install.text": "Accedé más rápido, incluso sin conexión, con el ícono directo en tu pantalla de inicio.",
+      "install.accept": "Instalar",
+      "install.dismiss": "Ahora no",
+      "install.iosText": "Para instalarla: tocá el ícono Compartir de Safari y elegí \"Agregar a pantalla de inicio\".",
       "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
@@ -1245,6 +1335,11 @@
       "integrantes.contractedNote": "* Contracted musician.",
       "footer.left": "Entre Ríos Symphony Orchestra — Secretariat of Culture of Entre Ríos",
       "footer.right": "Dr. Lódolo Eye Center · La Vieja Usina · Cover photo: Alejandro Astorga",
+      "install.title": "Install the program on your phone",
+      "install.text": "Get faster access, even offline, with the icon right on your home screen.",
+      "install.accept": "Install",
+      "install.dismiss": "Not now",
+      "install.iosText": "To install it: tap the Share icon in Safari and choose \"Add to Home Screen\".",
       "floatSearch.placeholder": "Search this page…",
     }
   };
@@ -1516,6 +1611,71 @@
   });
   document.getElementById('searchNext').addEventListener('click', ()=>goToHit(currentHit + 1));
   document.getElementById('searchPrev').addEventListener('click', ()=>goToHit(currentHit - 1));
+
+  // ---------- PWA: service worker + install banner ----------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+
+  (function initInstallBanner(){
+    const banner = document.getElementById('installBanner');
+    const acceptBtn = document.getElementById('installAccept');
+    const dismissBtn = document.getElementById('installDismiss');
+    const closeBtn = document.getElementById('installClose');
+    const DISMISS_KEY = 'oser-install-dismissed';
+    const DELAY_MS = 3 * 60 * 1000; // 3 minutos
+
+    let deferredPrompt = null;
+    let bannerShown = false;
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+    const alreadyDismissed = localStorage.getItem(DISMISS_KEY) === 'true';
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+    if (isStandalone || alreadyDismissed) return;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function showBanner(){
+      if (bannerShown || isStandalone) return;
+      // En iOS no existe beforeinstallprompt: si no hay prompt disponible y no es iOS, no molestamos.
+      if (!deferredPrompt && !isIOS) return;
+      if (isIOS) {
+        const textEl = banner.querySelector('.ib-text');
+        const dict = i18n[currentLang];
+        textEl.textContent = dict['install.iosText'];
+        acceptBtn.style.display = 'none';
+      }
+      bannerShown = true;
+      banner.classList.add('show');
+    }
+
+    function hideBanner(remember){
+      banner.classList.remove('show');
+      if (remember) localStorage.setItem(DISMISS_KEY, 'true');
+    }
+
+    setTimeout(showBanner, DELAY_MS);
+
+    acceptBtn.addEventListener('click', async ()=>{
+      hideBanner(true);
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      }
+    });
+    dismissBtn.addEventListener('click', ()=>hideBanner(true));
+    closeBtn.addEventListener('click', ()=>hideBanner(true));
+
+    window.addEventListener('appinstalled', ()=>hideBanner(true));
+  })();
 
   // ---------- Init ----------
   applyLang(currentLang);
