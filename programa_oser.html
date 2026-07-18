@@ -718,6 +718,31 @@
   }
   .qr-whatsapp:hover{background:#1ebc59;}
 
+  /* ---------- Social links ---------- */
+  .social-modal .qr-title{margin-bottom:22px;}
+  .social-links{display:flex;flex-direction:column;gap:10px;}
+  .social-link{
+    display:flex;align-items:center;gap:12px;
+    padding:13px 18px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:0.9375rem;
+    font-weight:600;
+    color:#fff;
+  }
+  .social-icon{
+    width:26px;height:26px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.22);
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.8125rem;
+    flex-shrink:0;
+  }
+  .social-instagram{background:linear-gradient(135deg,#405DE6,#5851DB,#833AB4,#C13584,#E1306C,#FD1D1D,#F56040,#F77737,#FCAF45,#FFDC80);}
+  .social-instagram:hover{opacity:0.92;}
+  .social-facebook{background:#1877F2;}
+  .social-facebook:hover{background:#1567d3;}
+
   /* ---------- Install banner ---------- */
   .install-banner{
     position:fixed;
@@ -794,6 +819,7 @@
           <button type="button" class="lang-btn" data-lang="en">EN</button>
         </div>
         <button type="button" class="qr-btn" id="qrToggleMobile" title="Compartir" aria-label="Compartir esta página">▦</button>
+        <button type="button" class="qr-btn" id="socialToggleMobile" title="Redes sociales" aria-label="Redes sociales">♪</button>
       </div>
     </div>
 
@@ -809,6 +835,7 @@
         <button type="button" class="lang-btn" data-lang="en">EN</button>
       </div>
       <button type="button" class="qr-btn" id="qrToggleDesktop" title="Compartir" aria-label="Compartir esta página">▦</button>
+      <button type="button" class="qr-btn" id="socialToggleDesktop" title="Redes sociales" aria-label="Redes sociales">♪</button>
     </div>
 
     <nav class="toc" aria-label="Secciones del programa">
@@ -1241,6 +1268,22 @@
   <button type="button" class="float-btn" id="menuFloatToggle" title="Menú" aria-label="Abrir menú de secciones" aria-expanded="false">☰</button>
 </div>
 
+<!-- ================= SOCIAL MODAL ================= -->
+<div class="qr-overlay" id="socialOverlay">
+  <div class="qr-modal social-modal" role="dialog" aria-modal="true" aria-label="Redes sociales">
+    <button type="button" class="qr-close" id="socialClose" aria-label="Cerrar">×</button>
+    <p class="qr-title" data-i18n="social.title">Seguí a la OSER</p>
+    <div class="social-links">
+      <a class="social-link social-instagram" href="https://www.instagram.com/SINFONICAER/" target="_blank" rel="noopener">
+        <span class="social-icon">◎</span> Instagram
+      </a>
+      <a class="social-link social-facebook" href="https://www.facebook.com/p/Orquesta-Sinf%C3%B3nica-de-Entre-R%C3%ADos-100044400102373/?locale=es_LA" target="_blank" rel="noopener">
+        <span class="social-icon">f</span> Facebook
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- ================= SHARE / QR MODAL ================= -->
 <div class="qr-overlay" id="qrOverlay">
   <div class="qr-modal" role="dialog" aria-modal="true" aria-label="Compartir esta página">
@@ -1361,6 +1404,7 @@
       "qr.copy": "Copiar link",
       "qr.copied": "¡Copiado!",
       "qr.whatsapp": "Enviar por WhatsApp",
+      "social.title": "Seguí a la OSER",
       "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
@@ -1445,6 +1489,7 @@
       "qr.copy": "Copy link",
       "qr.copied": "Copied!",
       "qr.whatsapp": "Send via WhatsApp",
+      "social.title": "Follow OSER",
       "floatSearch.placeholder": "Search this page…",
     }
   };
@@ -1716,6 +1761,27 @@
   });
   document.getElementById('searchNext').addEventListener('click', ()=>goToHit(currentHit + 1));
   document.getElementById('searchPrev').addEventListener('click', ()=>goToHit(currentHit - 1));
+
+  // ---------- Social links modal ----------
+  (function initSocialModal(){
+    const overlay = document.getElementById('socialOverlay');
+    const closeBtn = document.getElementById('socialClose');
+    const openBtns = [document.getElementById('socialToggleDesktop'), document.getElementById('socialToggleMobile')];
+
+    function openModal(){ overlay.classList.add('open'); }
+    function closeModal(){ overlay.classList.remove('open'); }
+
+    openBtns.forEach(btn=>{
+      if (btn) btn.addEventListener('click', openModal);
+    });
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e)=>{
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
 
   // ---------- QR / Share modal ----------
   (function initQrShare(){
