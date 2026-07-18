@@ -199,7 +199,7 @@
     background:
       radial-gradient(circle at 85% 10%, rgba(181,118,44,0.12), transparent 45%);
   }
-  .hero-inner{padding:100px 64px 84px;position:relative;max-width:920px;margin:0 auto;}
+  .hero-inner{padding:56px 64px 84px;position:relative;max-width:920px;margin:0 auto;}
   .hero .eyebrow{margin-bottom:22px;}
   .hero h1{
     font-size:clamp(2.5rem,6vw,4.25rem);
@@ -461,7 +461,6 @@
 
   /* ---------- Mobile nav toggle ---------- */
   .mobile-bar{display:none;}
-  .mobile-menu{display:none;}
 
   @media (max-width: 880px){
     .shell{grid-template-columns:1fr;}
@@ -493,23 +492,8 @@
       padding:6px 11px;cursor:pointer;
     }
     .lang-switch-mobile button.active{background:var(--brass);color:#fff;}
-    .mobile-bar button.menu-btn{
-      background:none;border:1px solid #e9e2d3;color:#e9e2d3;
-      padding:7px 12px;font-size:0.75rem;border-radius:var(--radius);
-      font-family:inherit;cursor:pointer;
-    }
-    .mobile-menu{
-      display:none;
-      background:var(--wood);
-      padding:12px 18px 20px;
-    }
-    .mobile-menu.open{display:block;}
-    .mobile-menu a{
-      display:block;color:#d8cfba;text-decoration:none;
-      padding:10px 4px;font-size:0.875rem;border-bottom:1px solid rgba(233,226,211,0.15);
-    }
     section{padding:56px 24px;}
-    .hero-inner{padding:56px 24px 60px;}
+    .hero-inner{padding:28px 24px 60px;}
     .hero-meta{grid-template-columns:1fr 1fr;}
     .director-card{grid-template-columns:1fr;}
     .director-photo{width:140px;height:140px;}
@@ -662,7 +646,6 @@
           <button type="button" class="lang-btn" data-lang="es">ES</button>
           <button type="button" class="lang-btn" data-lang="en">EN</button>
         </div>
-        <button class="menu-btn" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" data-i18n="nav.menu">Menú</button>
       </div>
     </div>
 
@@ -691,20 +674,13 @@
     </div>
   </aside>
 
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#inicio"><span class="num">00</span> · <span data-i18n="nav.inicio">Inicio</span></a>
-    <a href="#programa"><span class="num">01</span> · <span data-i18n="nav.programa">Programa</span></a>
-    <a href="#historia"><span class="num">02</span> · <span data-i18n="nav.historia">Historia</span></a>
-    <a href="#director"><span class="num">03</span> · <span data-i18n="nav.director">Director</span></a>
-    <a href="#integrantes"><span class="num">04</span> · <span data-i18n="nav.integrantes">Integrantes</span></a>
-  </div>
   <!-- ================= MAIN ================= -->
   <main>
 
     <!-- ---- HERO ---- -->
     <section class="hero" id="inicio">
       <div class="hero-inner">
-        <p class="eyebrow" data-i18n="hero.eyebrow">Música — Concierto de temporada</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Música Sinfónica — Concierto de temporada</p>
         <h1 data-i18n="hero.title">La Sinfónica<br>en <em>La Vieja Usina</em></h1>
         <p class="desc" data-i18n="hero.desc">La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.</p>
 
@@ -1132,7 +1108,7 @@
       "nav.historia": "Historia",
       "nav.director": "Director",
       "nav.integrantes": "Integrantes",
-      "hero.eyebrow": "Música — Concierto de temporada",
+      "hero.eyebrow": "Música Sinfónica — Concierto de temporada",
       "hero.title": "La Sinfónica<br>en <em>La Vieja Usina</em>",
       "hero.desc": "La Orquesta Sinfónica de Entre Ríos interpreta a Debussy y Berlioz bajo la dirección de Luis Gorelik, en el marco de un encuentro a sala llena en el corazón cultural de Paraná.",
       "hero.fecha": "Fecha",
@@ -1207,7 +1183,7 @@
       "nav.historia": "History",
       "nav.director": "Conductor",
       "nav.integrantes": "Members",
-      "hero.eyebrow": "Music — Season Concert",
+      "hero.eyebrow": "Symphonic Music — Season Concert",
       "hero.title": "The Symphony<br>at <em>La Vieja Usina</em>",
       "hero.desc": "The Entre Ríos Symphony Orchestra performs Debussy and Berlioz under the baton of Luis Gorelik, in a sold-out gathering at the cultural heart of Paraná.",
       "hero.fecha": "Date",
@@ -1355,19 +1331,6 @@
 
   document.querySelectorAll('.lang-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>applyLang(btn.dataset.lang));
-  });
-
-  // ---------- Mobile menu toggle ----------
-  const menuToggle = document.getElementById('menuToggle');
-  const mobileMenu = document.getElementById('mobileMenu');
-  menuToggle.addEventListener('click', function(){
-    const open = mobileMenu.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  document.querySelectorAll('.mobile-menu a').forEach(a=>{
-    a.addEventListener('click', ()=>{
-      mobileMenu.classList.remove('open');
-    });
   });
 
   // ---------- Active nav link on scroll ----------
