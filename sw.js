@@ -7,7 +7,8 @@ const APP_SHELL = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './qrcode.js'
 ];
 
 self.addEventListener('install', (event) => {

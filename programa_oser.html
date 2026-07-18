@@ -642,6 +642,82 @@
     .search-panel{width:calc(100vw - 90px);max-width:280px;}
   }
 
+  /* ---------- QR / Share ---------- */
+  .lang-switch-row{display:flex;align-items:center;gap:8px;}
+  .qr-btn{
+    width:32px;height:32px;
+    border-radius:6px;
+    border:1px solid rgba(233,226,211,0.35);
+    background:none;
+    color:#e9e2d3;
+    font-size:1rem;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .qr-btn:hover{background:rgba(233,226,211,0.12);}
+
+  .qr-overlay{
+    position:fixed;inset:0;
+    background:rgba(28,27,25,0.55);
+    z-index:500;
+    display:none;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .qr-overlay.open{display:flex;}
+  .qr-modal{
+    background:var(--panel);
+    border-radius:10px;
+    padding:32px;
+    width:min(360px, 100%);
+    text-align:center;
+    position:relative;
+    box-shadow:0 24px 60px rgba(0,0,0,0.4);
+  }
+  .qr-close{
+    position:absolute;top:12px;right:14px;
+    background:none;border:none;
+    font-size:1.375rem;color:var(--ink-soft);
+    cursor:pointer;line-height:1;
+  }
+  .qr-title{font-weight:600;font-size:1.0625rem;margin:0 0 18px;color:var(--ink);}
+  .qr-code{
+    display:flex;align-items:center;justify-content:center;
+    margin:0 0 16px;
+  }
+  .qr-code svg{width:200px;height:200px;}
+  .qr-url{
+    font-size:0.75rem;
+    color:var(--ink-soft);
+    word-break:break-all;
+    margin:0 0 20px;
+    font-family:"Courier New",monospace;
+  }
+  .qr-actions{display:flex;flex-direction:column;gap:10px;}
+  .qr-copy, .qr-whatsapp{
+    font-family:inherit;
+    font-size:0.875rem;
+    padding:11px 16px;
+    border-radius:100px;
+    cursor:pointer;
+    text-decoration:none;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .qr-copy{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink);
+  }
+  .qr-copy:hover{background:#f0ece0;}
+  .qr-copy.copied{border-color:var(--brass);color:var(--brass-deep);}
+  .qr-whatsapp{
+    background:#25D366;
+    color:#fff;
+    border:none;
+  }
+  .qr-whatsapp:hover{background:#1ebc59;}
+
   /* ---------- Install banner ---------- */
   .install-banner{
     position:fixed;
@@ -717,6 +793,7 @@
           <button type="button" class="lang-btn" data-lang="es">ES</button>
           <button type="button" class="lang-btn" data-lang="en">EN</button>
         </div>
+        <button type="button" class="qr-btn" id="qrToggleMobile" title="Compartir" aria-label="Compartir esta página">▦</button>
       </div>
     </div>
 
@@ -726,9 +803,12 @@
       <div class="sub" data-i18n="brand.sub">Programa de sala</div>
     </div>
 
-    <div class="lang-switch" role="group" aria-label="Idioma / Language">
-      <button type="button" class="lang-btn" data-lang="es">ES</button>
-      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    <div class="lang-switch-row">
+      <div class="lang-switch" role="group" aria-label="Idioma / Language">
+        <button type="button" class="lang-btn" data-lang="es">ES</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="qr-btn" id="qrToggleDesktop" title="Compartir" aria-label="Compartir esta página">▦</button>
     </div>
 
     <nav class="toc" aria-label="Secciones del programa">
@@ -1161,6 +1241,22 @@
   <button type="button" class="float-btn" id="menuFloatToggle" title="Menú" aria-label="Abrir menú de secciones" aria-expanded="false">☰</button>
 </div>
 
+<!-- ================= SHARE / QR MODAL ================= -->
+<div class="qr-overlay" id="qrOverlay">
+  <div class="qr-modal" role="dialog" aria-modal="true" aria-label="Compartir esta página">
+    <button type="button" class="qr-close" id="qrClose" aria-label="Cerrar">×</button>
+    <p class="qr-title" data-i18n="qr.title">Compartir el programa</p>
+    <div class="qr-code" id="qrCodeHolder"></div>
+    <p class="qr-url" id="qrUrlText"></p>
+    <div class="qr-actions">
+      <button type="button" class="qr-copy" id="qrCopyBtn" data-i18n="qr.copy">Copiar link</button>
+      <a class="qr-whatsapp" id="qrWhatsappLink" href="#" target="_blank" rel="noopener">
+        <span aria-hidden="true">↗</span> <span data-i18n="qr.whatsapp">Enviar por WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- ================= INSTALL BANNER ================= -->
 <div class="install-banner" id="installBanner" role="dialog" aria-live="polite">
   <div class="ib-icon">ER</div>
@@ -1175,6 +1271,7 @@
   <button type="button" class="ib-close" id="installClose" aria-label="Cerrar">×</button>
 </div>
 
+<script src="qrcode.js"></script>
 <script>
 (function(){
 
@@ -1260,6 +1357,10 @@
       "install.accept": "Instalar",
       "install.dismiss": "Ahora no",
       "install.iosText": "Para instalarla: tocá el ícono Compartir de Safari y elegí \"Agregar a pantalla de inicio\".",
+      "qr.title": "Compartir el programa",
+      "qr.copy": "Copiar link",
+      "qr.copied": "¡Copiado!",
+      "qr.whatsapp": "Enviar por WhatsApp",
       "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
@@ -1340,6 +1441,10 @@
       "install.accept": "Install",
       "install.dismiss": "Not now",
       "install.iosText": "To install it: tap the Share icon in Safari and choose \"Add to Home Screen\".",
+      "qr.title": "Share this program",
+      "qr.copy": "Copy link",
+      "qr.copied": "Copied!",
+      "qr.whatsapp": "Send via WhatsApp",
       "floatSearch.placeholder": "Search this page…",
     }
   };
@@ -1611,6 +1716,75 @@
   });
   document.getElementById('searchNext').addEventListener('click', ()=>goToHit(currentHit + 1));
   document.getElementById('searchPrev').addEventListener('click', ()=>goToHit(currentHit - 1));
+
+  // ---------- QR / Share modal ----------
+  (function initQrShare(){
+    const overlay = document.getElementById('qrOverlay');
+    const closeBtn = document.getElementById('qrClose');
+    const codeHolder = document.getElementById('qrCodeHolder');
+    const urlText = document.getElementById('qrUrlText');
+    const copyBtn = document.getElementById('qrCopyBtn');
+    const whatsappLink = document.getElementById('qrWhatsappLink');
+    const openBtns = [document.getElementById('qrToggleDesktop'), document.getElementById('qrToggleMobile')];
+
+    const pageUrl = window.location.href.split('#')[0];
+    let rendered = false;
+
+    function renderQr(){
+      if (rendered) return;
+      rendered = true;
+      const qr = qrcode(0, 'M'); // typeNumber 0 = auto-size
+      qr.addData(pageUrl);
+      qr.make();
+      codeHolder.innerHTML = qr.createSvgTag({scalable:true});
+      urlText.textContent = pageUrl;
+      const shareText = document.title + ' — ' + pageUrl;
+      whatsappLink.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+    }
+
+    function openModal(){
+      renderQr();
+      overlay.classList.add('open');
+    }
+    function closeModal(){
+      overlay.classList.remove('open');
+    }
+
+    openBtns.forEach(btn=>{
+      if (btn) btn.addEventListener('click', openModal);
+    });
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e)=>{
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape') closeModal();
+    });
+
+    copyBtn.addEventListener('click', async ()=>{
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+      } catch(e){
+        // Fallback para navegadores sin Clipboard API
+        const ta = document.createElement('textarea');
+        ta.value = pageUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e2) {}
+        document.body.removeChild(ta);
+      }
+      const dict = i18n[currentLang];
+      const original = dict['qr.copy'];
+      copyBtn.textContent = dict['qr.copied'];
+      copyBtn.classList.add('copied');
+      setTimeout(()=>{
+        copyBtn.textContent = i18n[currentLang]['qr.copy'];
+        copyBtn.classList.remove('copied');
+      }, 1800);
+    });
+  })();
 
   // ---------- PWA: service worker + install banner ----------
   if ('serviceWorker' in navigator) {
