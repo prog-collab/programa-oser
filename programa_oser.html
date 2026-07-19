@@ -1465,7 +1465,6 @@
       "social.shareVideoBtn": "Grabar video",
       "social.shareCaptionText": "🎻 En vivo con la Orquesta Sinfónica de Entre Ríos #OSER",
       "social.shareUnsupported": "Tu navegador no permite compartir directamente. Se descargó el archivo: subilo manualmente a Instagram o Facebook.",
-      "social.shareError": "No se pudo compartir. Intentá de nuevo.",
       "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
@@ -1556,7 +1555,6 @@
       "social.shareVideoBtn": "Record video",
       "social.shareCaptionText": "🎻 Live with the Entre Ríos Symphony Orchestra #OSER",
       "social.shareUnsupported": "Your browser can't share directly. The file was downloaded — upload it manually to Instagram or Facebook.",
-      "social.shareError": "Couldn't share. Please try again.",
       "floatSearch.placeholder": "Search this page…",
     }
   };
@@ -1864,6 +1862,20 @@
       statusEl.textContent = (dict && dict[key]) || fallback || '';
     }
 
+    function downloadFallback(file){
+      // Usado cuando no hay Web Share API con archivos, o cuando falla por algún motivo
+      // (p. ej. el gesto de usuario expira mientras se graba un video largo).
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name || 'oser-momento';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url), 30000);
+      setStatus('social.shareUnsupported', 'Tu navegador no permite compartir directamente. Se descargó el archivo: subilo manualmente a Instagram o Facebook.');
+    }
+
     pairs.forEach(({ btn, input })=>{
       if (!btn || !input) return;
 
@@ -1886,23 +1898,17 @@
             await navigator.share({ files: [file], title: 'OSER', text: shareText });
             statusEl.textContent = '';
           } catch (err) {
-            if (err && err.name !== 'AbortError') {
-              setStatus('social.shareError', 'No se pudo compartir. Intentá de nuevo.');
+            if (err && err.name === 'AbortError') {
+              // El usuario cerró el menú de compartir a propósito: no hacer nada.
+            } else {
+              console.error('navigator.share falló, se usa descarga como respaldo:', err);
+              downloadFallback(file);
             }
           } finally {
             btn.disabled = false;
           }
         } else {
-          // Fallback para navegadores sin Web Share API con archivos: descargar para compartir manualmente
-          const url = URL.createObjectURL(file);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = file.name || 'oser-momento';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          setTimeout(()=>URL.revokeObjectURL(url), 30000);
-          setStatus('social.shareUnsupported', 'Tu navegador no permite compartir directamente. Se descargó el archivo: subilo manualmente a Instagram o Facebook.');
+          downloadFallback(file);
         }
       });
     });
