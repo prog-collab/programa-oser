@@ -747,6 +747,40 @@
   .social-facebook{background:#1877F2;}
   .social-facebook:hover{background:#1567d3;}
 
+  /* ---------- Social share (camera) ---------- */
+  .social-share{
+    margin-top:18px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .social-share-label{
+    font-size:0.8125rem;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+    text-align:center;
+  }
+  .social-share-btn{
+    width:100%;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:13px 18px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:0.9375rem;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(135deg,#4f5bd5,#962fbf,#d62976,#fa7e1e,#feda75);
+  }
+  .social-share-btn:hover{opacity:0.92;}
+  .social-share-btn:disabled{opacity:0.6;cursor:default;}
+  .social-share-status{
+    margin:10px 0 0;
+    font-size:0.75rem;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+
   /* ---------- Install banner ---------- */
   .install-banner{
     position:fixed;
@@ -1285,6 +1319,15 @@
         <span class="social-icon">f</span> Facebook
       </a>
     </div>
+    <div class="social-share">
+      <p class="social-share-label" data-i18n="social.shareLabel">¿Estás en la sala? Sacá una foto o video y compartilo</p>
+      <button type="button" class="social-share-btn" id="socialShareBtn">
+        <span class="social-icon" aria-hidden="true">📷</span>
+        <span data-i18n="social.shareBtn">Sacar foto o video</span>
+      </button>
+      <p class="social-share-status" id="socialShareStatus" role="status" aria-live="polite"></p>
+      <input type="file" id="socialCaptureInput" accept="image/*,video/*" capture="environment" hidden>
+    </div>
   </div>
 </div>
 
@@ -1409,6 +1452,11 @@
       "qr.copied": "¡Copiado!",
       "qr.whatsapp": "Enviar por WhatsApp",
       "social.title": "Seguí a la OSER",
+      "social.shareLabel": "¿Estás en la sala? Sacá una foto o video y compartilo",
+      "social.shareBtn": "Sacar foto o video",
+      "social.shareCaptionText": "🎻 En vivo con la Orquesta Sinfónica de Entre Ríos #OSER",
+      "social.shareUnsupported": "Tu navegador no permite compartir directamente. Se descargó el archivo: subilo manualmente a Instagram o Facebook.",
+      "social.shareError": "No se pudo compartir. Intentá de nuevo.",
       "floatSearch.placeholder": "Buscar en la página…",
     },
     en: {
@@ -1494,6 +1542,11 @@
       "qr.copied": "Copied!",
       "qr.whatsapp": "Send via WhatsApp",
       "social.title": "Follow OSER",
+      "social.shareLabel": "At the venue? Take a photo or video and share it",
+      "social.shareBtn": "Take photo or video",
+      "social.shareCaptionText": "🎻 Live with the Entre Ríos Symphony Orchestra #OSER",
+      "social.shareUnsupported": "Your browser can't share directly. The file was downloaded — upload it manually to Instagram or Facebook.",
+      "social.shareError": "Couldn't share. Please try again.",
       "floatSearch.placeholder": "Search this page…",
     }
   };
@@ -1784,6 +1837,58 @@
     });
     document.addEventListener('keydown', (e)=>{
       if (e.key === 'Escape') closeModal();
+    });
+  })();
+
+  // ---------- Camera capture + native share ----------
+  (function initSocialShare(){
+    const shareBtn = document.getElementById('socialShareBtn');
+    const captureInput = document.getElementById('socialCaptureInput');
+    const statusEl = document.getElementById('socialShareStatus');
+    if (!shareBtn || !captureInput) return;
+
+    function setStatus(key, fallback){
+      const dict = i18n[currentLang];
+      statusEl.textContent = (dict && dict[key]) || fallback || '';
+    }
+
+    shareBtn.addEventListener('click', ()=>{
+      statusEl.textContent = '';
+      captureInput.value = '';
+      captureInput.click();
+    });
+
+    captureInput.addEventListener('change', async ()=>{
+      const file = captureInput.files && captureInput.files[0];
+      if (!file) return;
+
+      const dict = i18n[currentLang];
+      const shareText = (dict && dict['social.shareCaptionText']) || '';
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        shareBtn.disabled = true;
+        try {
+          await navigator.share({ files: [file], title: 'OSER', text: shareText });
+          statusEl.textContent = '';
+        } catch (err) {
+          if (err && err.name !== 'AbortError') {
+            setStatus('social.shareError', 'No se pudo compartir. Intentá de nuevo.');
+          }
+        } finally {
+          shareBtn.disabled = false;
+        }
+      } else {
+        // Fallback para navegadores sin Web Share API con archivos: descargar para compartir manualmente
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name || 'oser-momento';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url), 30000);
+        setStatus('social.shareUnsupported', 'Tu navegador no permite compartir directamente. Se descargó el archivo: subilo manualmente a Instagram o Facebook.');
+      }
     });
   })();
 
